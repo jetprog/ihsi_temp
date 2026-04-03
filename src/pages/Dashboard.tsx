@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { useParams } from "react-router-dom";
+import { useParams, Link } from "react-router-dom";
 import { Layout } from "@/components/layout/Layout";
 import { StatCard } from "@/components/shared/StatCard";
 import { ChartContainer } from "@/components/shared/ChartContainer";
@@ -7,7 +7,7 @@ import { Button } from "@/components/ui/button";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Download, Copy, Users, TrendingUp, DollarSign, BarChart3, LineChart as LineChartIcon, Map } from "lucide-react";
+import { Download, Copy, Users, TrendingUp, DollarSign, BarChart3, LineChart as LineChartIcon, Map, ChevronRight, Compass } from "lucide-react";
 import {
   AreaChart, Area, BarChart, Bar, LineChart, Line,
   ResponsiveContainer, XAxis, YAxis, Tooltip, CartesianGrid, Legend,
@@ -16,48 +16,48 @@ import { toast } from "sonner";
 
 const dashboardConfig: Record<string, { title: string; kpis: any[] }> = {
   demographie: {
-    title: "Tableau de bord — Démographie",
+    title: "Démographie",
     kpis: [
-      { label: "Population totale", value: "12.0M", trend: "up" as const, trendValue: "+1.4%", icon: Users },
-      { label: "Taux de natalité", value: "22.4‰", trend: "down" as const, trendValue: "-0.3‰" },
-      { label: "Espérance de vie", value: "64.7 ans", trend: "up" as const, trendValue: "+0.5" },
-      { label: "Densité", value: "432/km²", trend: "up" as const, trendValue: "+1.2%" },
+      { label: "Population totale", value: "12.0M", trend: "up" as const, trendValue: "+1.4%", icon: Users, sparklineData: [11.1, 11.3, 11.4, 11.6, 11.7, 11.9, 12.0] },
+      { label: "Taux de natalité", value: "22.4‰", trend: "down" as const, trendValue: "-0.3‰", sparklineData: [23.5, 23.2, 23.0, 22.8, 22.6, 22.4] },
+      { label: "Espérance de vie", value: "64.7 ans", trend: "up" as const, trendValue: "+0.5", sparklineData: [62.5, 63.0, 63.5, 64.0, 64.3, 64.7] },
+      { label: "Densité", value: "432/km²", trend: "up" as const, trendValue: "+1.2%", sparklineData: [410, 415, 420, 425, 428, 432] },
     ],
   },
   ipc: {
-    title: "Tableau de bord — IPC",
+    title: "IPC",
     kpis: [
-      { label: "IPC global", value: "324.5", trend: "up" as const, trendValue: "+1.2%" },
-      { label: "Inflation annuelle", value: "24.8%", trend: "down" as const, trendValue: "-2.1 pts" },
-      { label: "Alimentation", value: "+28.3%", trend: "up" as const, trendValue: "+0.5%" },
-      { label: "Transport", value: "+18.7%", trend: "down" as const, trendValue: "-1.3%" },
+      { label: "IPC global", value: "324.5", trend: "up" as const, trendValue: "+1.2%", sparklineData: [290, 300, 310, 315, 320, 324.5] },
+      { label: "Inflation annuelle", value: "24.8%", trend: "down" as const, trendValue: "-2.1 pts", sparklineData: [28, 27, 26.5, 26, 25.5, 24.8] },
+      { label: "Alimentation", value: "+28.3%", trend: "up" as const, trendValue: "+0.5%", sparklineData: [26, 27, 27.5, 28, 28.1, 28.3] },
+      { label: "Transport", value: "+18.7%", trend: "down" as const, trendValue: "-1.3%", sparklineData: [22, 21, 20, 19.5, 19, 18.7] },
     ],
   },
   pib: {
-    title: "Tableau de bord — PIB",
+    title: "PIB",
     kpis: [
-      { label: "PIB nominal", value: "$21.5B", trend: "up" as const, trendValue: "+3.2%", icon: DollarSign },
-      { label: "PIB/habitant", value: "$1,792", trend: "up" as const, trendValue: "+1.8%" },
-      { label: "Croissance réelle", value: "1.8%", trend: "up" as const, trendValue: "+0.5 pts" },
-      { label: "Investissement/PIB", value: "26.4%", trend: "up" as const, trendValue: "+1.1 pts" },
+      { label: "PIB nominal", value: "$21.5B", trend: "up" as const, trendValue: "+3.2%", icon: DollarSign, sparklineData: [18, 19, 19.5, 20, 20.8, 21.5] },
+      { label: "PIB/habitant", value: "$1,792", trend: "up" as const, trendValue: "+1.8%", sparklineData: [1650, 1700, 1720, 1750, 1770, 1792] },
+      { label: "Croissance réelle", value: "1.8%", trend: "up" as const, trendValue: "+0.5 pts", sparklineData: [0.5, 0.8, 1.0, 1.2, 1.5, 1.8] },
+      { label: "Investissement/PIB", value: "26.4%", trend: "up" as const, trendValue: "+1.1 pts", sparklineData: [23, 24, 24.5, 25, 25.8, 26.4] },
     ],
   },
   travail: {
-    title: "Tableau de bord — Travail",
+    title: "Travail",
     kpis: [
-      { label: "Population active", value: "4.8M", trend: "up" as const, trendValue: "+2.1%" },
-      { label: "Taux de chômage", value: "14.5%", trend: "neutral" as const, trendValue: "0.0 pts" },
-      { label: "Emploi informel", value: "58.3%", trend: "down" as const, trendValue: "-0.8%" },
-      { label: "Sous-emploi", value: "22.1%", trend: "down" as const, trendValue: "-1.2 pts" },
+      { label: "Population active", value: "4.8M", trend: "up" as const, trendValue: "+2.1%", sparklineData: [4.2, 4.3, 4.4, 4.5, 4.6, 4.8] },
+      { label: "Taux de chômage", value: "14.5%", trend: "neutral" as const, trendValue: "0.0 pts", sparklineData: [15, 14.8, 14.6, 14.5, 14.5, 14.5] },
+      { label: "Emploi informel", value: "58.3%", trend: "down" as const, trendValue: "-0.8%", sparklineData: [60, 59.5, 59, 58.8, 58.5, 58.3] },
+      { label: "Sous-emploi", value: "22.1%", trend: "down" as const, trendValue: "-1.2 pts", sparklineData: [25, 24, 23.5, 23, 22.5, 22.1] },
     ],
   },
   social: {
-    title: "Tableau de bord — Social",
+    title: "Social",
     kpis: [
-      { label: "Taux de pauvreté", value: "58.5%", trend: "down" as const, trendValue: "-1.3 pts" },
-      { label: "Accès eau potable", value: "62.4%", trend: "up" as const, trendValue: "+2.1%" },
-      { label: "Taux alphabétisation", value: "72.3%", trend: "up" as const, trendValue: "+1.5%" },
-      { label: "Scolarisation", value: "84.1%", trend: "up" as const, trendValue: "+2.8%" },
+      { label: "Taux de pauvreté", value: "58.5%", trend: "down" as const, trendValue: "-1.3 pts", sparklineData: [62, 61, 60.5, 60, 59, 58.5] },
+      { label: "Accès eau potable", value: "62.4%", trend: "up" as const, trendValue: "+2.1%", sparklineData: [55, 57, 58, 59, 61, 62.4] },
+      { label: "Taux alphabétisation", value: "72.3%", trend: "up" as const, trendValue: "+1.5%", sparklineData: [67, 68, 69, 70, 71, 72.3] },
+      { label: "Scolarisation", value: "84.1%", trend: "up" as const, trendValue: "+2.8%", sparklineData: [78, 79, 80, 81, 82, 84.1] },
     ],
   },
 };
@@ -112,25 +112,37 @@ export default function Dashboard() {
 
   return (
     <Layout>
-      <div className="container py-8">
-        {/* Title + Actions */}
-        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-6">
-          <h1 className="text-2xl font-bold text-foreground">{config.title}</h1>
-          <div className="flex flex-wrap gap-2">
-            <Button variant="outline" size="sm" className="gap-1.5 h-9">
-              <Download className="h-3.5 w-3.5" /> CSV
-            </Button>
-            <Button variant="outline" size="sm" className="gap-1.5 h-9">
-              <Download className="h-3.5 w-3.5" /> PNG
-            </Button>
-            <Button variant="outline" size="sm" className="gap-1.5 h-9" onClick={handleEmbed}>
-              <Copy className="h-3.5 w-3.5" /> Embed
-            </Button>
+      {/* Colored header banner */}
+      <div className="bg-primary text-primary-foreground">
+        <div className="container py-6">
+          {/* Breadcrumb */}
+          <div className="flex items-center gap-1.5 text-xs text-primary-foreground/60 mb-3">
+            <Link to="/" className="hover:text-primary-foreground/80 transition-colors">Accueil</Link>
+            <ChevronRight className="h-3 w-3" />
+            <Link to="/tableaux-de-bord" className="hover:text-primary-foreground/80 transition-colors">Tableaux de bord</Link>
+            <ChevronRight className="h-3 w-3" />
+            <span className="text-primary-foreground/90 font-medium">{config.title}</span>
+          </div>
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+            <h1 className="text-2xl font-extrabold tracking-tight">Tableau de bord — {config.title}</h1>
+            <div className="flex flex-wrap gap-2">
+              <Button variant="secondary" size="sm" className="gap-1.5 h-9">
+                <Download className="h-3.5 w-3.5" /> CSV
+              </Button>
+              <Button variant="secondary" size="sm" className="gap-1.5 h-9">
+                <Download className="h-3.5 w-3.5" /> PNG
+              </Button>
+              <Button variant="secondary" size="sm" className="gap-1.5 h-9" onClick={handleEmbed}>
+                <Copy className="h-3.5 w-3.5" /> Embed
+              </Button>
+            </div>
           </div>
         </div>
+      </div>
 
-        {/* KPI row */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
+      <div className="container py-8">
+        {/* KPI row with sparklines */}
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
           {config.kpis.map((kpi: any) => (
             <StatCard
               key={kpi.label}
@@ -138,15 +150,22 @@ export default function Dashboard() {
               value={kpi.value}
               trend={kpi.trend}
               trendValue={kpi.trendValue}
+              sparklineData={kpi.sparklineData}
               icon={kpi.icon ? <kpi.icon className="h-4 w-4" /> : undefined}
             />
           ))}
         </div>
 
+        {/* User guidance */}
+        <div className="flex items-center gap-2 mb-4 text-sm text-muted-foreground">
+          <Compass className="h-4 w-4 text-secondary" />
+          <span>Que voulez-vous explorer ? Utilisez les filtres pour affiner les résultats.</span>
+        </div>
+
         {/* Filters */}
-        <div className="flex flex-wrap items-center gap-3 mb-6 p-4 rounded-lg bg-muted/50 border">
+        <div className="flex flex-wrap items-center gap-3 mb-6 p-4 rounded-xl bg-muted/50 border">
           <div className="flex items-center gap-2">
-            <span className="text-xs font-medium text-muted-foreground whitespace-nowrap">Période</span>
+            <span className="text-xs font-semibold text-muted-foreground whitespace-nowrap">Période</span>
             <Select value={yearFrom} onValueChange={setYearFrom}>
               <SelectTrigger className="w-24 h-8 text-xs"><SelectValue /></SelectTrigger>
               <SelectContent>{years.map(y => <SelectItem key={y} value={y}>{y}</SelectItem>)}</SelectContent>
@@ -168,9 +187,9 @@ export default function Dashboard() {
         </div>
 
         {/* Main Chart with View Toggle */}
-        <div className="mb-6">
+        <div className="mb-8">
           <div className="flex items-center justify-between mb-3">
-            <h2 className="text-sm font-semibold text-foreground">Visualisation principale</h2>
+            <h2 className="text-sm font-bold text-foreground">Visualisation principale</h2>
             <Tabs value={chartView} onValueChange={setChartView}>
               <TabsList className="h-8">
                 <TabsTrigger value="line" className="gap-1 text-xs px-3 h-7">
@@ -230,9 +249,9 @@ export default function Dashboard() {
         </div>
 
         {/* Data table */}
-        <div className="rounded-lg border bg-card mb-6">
+        <div className="rounded-xl border bg-card mb-6">
           <div className="p-4 border-b flex items-center justify-between">
-            <h3 className="font-semibold text-sm">Données détaillées</h3>
+            <h3 className="font-bold text-sm">Données détaillées</h3>
             <Button variant="outline" size="sm" className="gap-1 h-8 text-xs">
               <Download className="h-3 w-3" /> Exporter
             </Button>
@@ -260,13 +279,13 @@ export default function Dashboard() {
         </div>
 
         {/* Source & Methodology */}
-        <div className="rounded-lg border bg-muted/30 p-5">
-          <h3 className="font-semibold text-sm text-foreground mb-2">Source & Méthodologie</h3>
+        <div className="rounded-xl border bg-gradient-to-br from-muted/40 to-muted/20 p-6">
+          <h3 className="font-bold text-sm text-foreground mb-3">Source & Méthodologie</h3>
           <p className="text-xs text-muted-foreground leading-relaxed mb-2">
             <strong>Source :</strong> Institut Haïtien de Statistique et d'Informatique (IHSI), données collectées dans le cadre des enquêtes nationales et du recensement général.
           </p>
-          <p className="text-xs text-muted-foreground leading-relaxed mb-3">
-            <strong>Dernière mise à jour :</strong> Mars 2025 &nbsp;·&nbsp; <strong>Fréquence :</strong> Trimestrielle
+          <p className="text-xs text-muted-foreground leading-relaxed mb-4">
+            <strong>Dernière mise à jour :</strong> Mars 2025 · <strong>Fréquence :</strong> Trimestrielle
           </p>
           <Button variant="link" size="sm" className="h-auto p-0 text-xs text-secondary" asChild>
             <a href="/publications">Consulter la note méthodologique →</a>

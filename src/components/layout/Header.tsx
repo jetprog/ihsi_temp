@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { Link, useLocation } from "react-router-dom";
-import { Menu, Search, Globe, X } from "lucide-react";
+import { Menu, Search, Globe } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from "@/components/ui/sheet";
@@ -9,44 +9,59 @@ import { MegaMenu } from "./MegaMenu";
 import { MobileNav } from "./MobileNav";
 import { cn } from "@/lib/utils";
 
-const languages = ["FR", "EN", "HT"];
+const languages = [
+  { code: "FR", label: "Français" },
+  { code: "HT", label: "Kreyòl" },
+  { code: "EN", label: "English" },
+];
 
 export function Header() {
-  const [searchOpen, setSearchOpen] = useState(false);
   const [lang, setLang] = useState("FR");
   const location = useLocation();
 
   return (
     <header className="sticky top-0 z-50 w-full">
+      {/* Skip to content */}
+      <a
+        href="#main-content"
+        className="sr-only focus:not-sr-only focus:absolute focus:top-2 focus:left-2 focus:z-[100] focus:bg-primary focus:text-primary-foreground focus:px-4 focus:py-2 focus:rounded-md"
+      >
+        Aller au contenu principal
+      </a>
+
       {/* Utility bar */}
       <div className="bg-primary text-primary-foreground">
-        <div className="container flex h-8 items-center justify-between text-xs">
-          <span className="font-medium tracking-wide">Institut Haïtien de Statistique et d'Informatique</span>
-          <div className="flex items-center gap-3">
-            <div className="flex items-center gap-1">
-              <Globe className="h-3 w-3" />
-              {languages.map((l) => (
-                <button
-                  key={l}
-                  onClick={() => setLang(l)}
-                  className={cn(
-                    "px-1.5 py-0.5 rounded text-xs transition-colors",
-                    lang === l ? "bg-primary-foreground/20 font-semibold" : "hover:bg-primary-foreground/10"
-                  )}
-                >
-                  {l}
-                </button>
-              ))}
-            </div>
+        <div className="container flex h-9 items-center justify-between text-xs">
+          <span className="font-medium tracking-wide hidden sm:block">
+            Institut Haïtien de Statistique et d'Informatique
+          </span>
+          <span className="font-medium tracking-wide sm:hidden">IHSI</span>
+          <div className="flex items-center gap-1">
+            <Globe className="h-3.5 w-3.5 mr-1 opacity-70" />
+            {languages.map((l) => (
+              <button
+                key={l.code}
+                onClick={() => setLang(l.code)}
+                title={l.label}
+                className={cn(
+                  "px-2 py-1 rounded text-xs font-medium transition-all duration-200 min-w-[32px]",
+                  lang === l.code
+                    ? "bg-primary-foreground/25 font-bold"
+                    : "hover:bg-primary-foreground/10 opacity-70 hover:opacity-100"
+                )}
+              >
+                {l.code}
+              </button>
+            ))}
           </div>
         </div>
       </div>
 
       {/* Main nav */}
       <div className="bg-card border-b shadow-sm">
-        <div className="container flex h-14 items-center justify-between gap-4">
+        <div className="container flex h-14 items-center gap-4">
           {/* Logo */}
-          <Link to="/" className="flex items-center gap-2 shrink-0">
+          <Link to="/" className="flex items-center gap-2.5 shrink-0 mr-2">
             <div className="h-9 w-9 rounded-lg bg-primary flex items-center justify-center">
               <span className="text-primary-foreground font-bold text-sm">IH</span>
             </div>
@@ -54,32 +69,29 @@ export function Header() {
           </Link>
 
           {/* Desktop nav */}
-          <nav className="hidden lg:flex items-center gap-1">
+          <nav className="hidden lg:flex items-center gap-0.5 flex-1">
             {navigationItems.map((item) => (
               <MegaMenu key={item.title} item={item} currentPath={location.pathname} />
             ))}
           </nav>
 
-          {/* Actions */}
-          <div className="flex items-center gap-2">
-            {searchOpen ? (
-              <div className="flex items-center gap-2 animate-fade-in">
-                <Input
-                  placeholder="Rechercher..."
-                  className="w-48 lg:w-64 h-9"
-                  autoFocus
-                />
-                <Button variant="ghost" size="icon" onClick={() => setSearchOpen(false)} className="h-9 w-9">
-                  <X className="h-4 w-4" />
-                </Button>
-              </div>
-            ) : (
-              <Button variant="ghost" size="icon" onClick={() => setSearchOpen(true)} className="h-9 w-9">
-                <Search className="h-4 w-4" />
-              </Button>
-            )}
+          {/* Always-visible search */}
+          <div className="flex-1 max-w-xs hidden md:block">
+            <div className="relative">
+              <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-3.5 w-3.5 text-muted-foreground" />
+              <Input
+                placeholder="Rechercher..."
+                className="pl-9 h-9 text-sm bg-muted/50 border-transparent focus:border-border focus:bg-card transition-colors"
+              />
+            </div>
+          </div>
 
-            {/* Mobile menu */}
+          {/* Mobile search + menu */}
+          <div className="flex items-center gap-1 ml-auto lg:ml-0">
+            <Button variant="ghost" size="icon" className="md:hidden h-9 w-9">
+              <Search className="h-4 w-4" />
+            </Button>
+
             <Sheet>
               <SheetTrigger asChild>
                 <Button variant="ghost" size="icon" className="lg:hidden h-9 w-9">
