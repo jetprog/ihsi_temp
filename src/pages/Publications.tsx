@@ -35,7 +35,7 @@ const ITEMS_PER_PAGE = 6;
 export default function Publications() {
   const { slug } = useParams<{ slug: string }>();
   const navigate = useNavigate();
-  const [activeFilter, setActiveFilter] = useState("Tous");
+  const [activeFilter, setActiveFilter] = useState(categoryType || "Tous");
   const [search, setSearch] = useState("");
   const [selectedYear, setSelectedYear] = useState("Toutes");
   const [page, setPage] = useState(1);
