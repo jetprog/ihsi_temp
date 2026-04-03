@@ -282,7 +282,17 @@ function TopicPage({ topic }: { topic: TopicConfig }) {
 
         {/* Data Table */}
         <div>
-          <h2 className="text-lg font-semibold text-foreground mb-3">Indicateurs détaillés</h2>
+          <div className="flex items-center justify-between mb-3">
+            <h2 className="text-lg font-semibold text-foreground">Indicateurs détaillés</h2>
+            <div className="flex gap-2">
+              <Button variant="outline" size="sm" className="gap-1.5 text-xs" onClick={() => exportCSV(topic)}>
+                <Download className="h-3.5 w-3.5" /> CSV
+              </Button>
+              <Button variant="outline" size="sm" className="gap-1.5 text-xs" onClick={() => exportPDF(topic)}>
+                <FileText className="h-3.5 w-3.5" /> PDF
+              </Button>
+            </div>
+          </div>
           <div className="rounded-lg border overflow-hidden">
             <Table>
               <TableHeader>
