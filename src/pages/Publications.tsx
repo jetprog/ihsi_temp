@@ -40,8 +40,11 @@ export default function Publications() {
   const [selectedYear, setSelectedYear] = useState("Toutes");
   const [page, setPage] = useState(1);
 
-  // Detail view
-  if (slug) {
+  // Check if slug is a category filter
+  const categoryType = slug ? categorySlugMap[slug] : undefined;
+
+  // Detail view (only if slug exists, is NOT a category, and matches a publication)
+  if (slug && !categoryType) {
     const pub = publications.find((p) => p.slug === slug);
     if (!pub) {
       return (
