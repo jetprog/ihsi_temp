@@ -35,13 +35,11 @@ const ITEMS_PER_PAGE = 6;
 export default function Publications() {
   const { slug } = useParams<{ slug: string }>();
   const navigate = useNavigate();
+  const categoryType = slug ? categorySlugMap[slug] : undefined;
   const [activeFilter, setActiveFilter] = useState(categoryType || "Tous");
   const [search, setSearch] = useState("");
   const [selectedYear, setSelectedYear] = useState("Toutes");
   const [page, setPage] = useState(1);
-
-  // Check if slug is a category filter
-  const categoryType = slug ? categorySlugMap[slug] : undefined;
 
   // Detail view (only if slug exists, is NOT a category, and matches a publication)
   if (slug && !categoryType) {
