@@ -14,6 +14,7 @@ import {
   AreaChart, Area, BarChart, Bar,
   ResponsiveContainer, XAxis, YAxis, Tooltip, CartesianGrid,
 } from "recharts";
+import heroMapBg from "@/assets/hero-haiti-map.jpg";
 
 const populationData = [
   { year: "2018", value: 11.1 }, { year: "2019", value: 11.3 },
@@ -107,9 +108,10 @@ export default function Index() {
   return (
     <Layout>
       {/* Hero */}
-      <section className="bg-primary relative overflow-hidden">
-        <div className="absolute inset-0 opacity-10">
-          <div className="absolute inset-0 bg-gradient-to-br from-secondary/30 to-transparent" />
+      <section className="relative overflow-hidden">
+        <div className="absolute inset-0">
+          <img src={heroMapBg} alt="" className="w-full h-full object-cover" />
+          <div className="absolute inset-0 bg-primary/70" />
         </div>
         <div className="container relative py-16 md:py-24">
           <div className="max-w-2xl animate-fade-in" key={activeSlide}>

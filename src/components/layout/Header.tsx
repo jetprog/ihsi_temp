@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { Link, useLocation } from "react-router-dom";
 import { Menu, Search, Globe } from "lucide-react";
+import ihsiLogo from "@/assets/ihsi-75th-logo.jpeg";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from "@/components/ui/sheet";
@@ -62,9 +63,7 @@ export function Header() {
         <div className="container flex h-14 items-center gap-4">
           {/* Logo */}
           <Link to="/" className="flex items-center gap-2.5 shrink-0 mr-2">
-            <div className="h-9 w-9 rounded-lg bg-primary flex items-center justify-center">
-              <span className="text-primary-foreground font-bold text-sm">IH</span>
-            </div>
+            <img src={ihsiLogo} alt="IHSI - Institut Haïtien de Statistique et d'Informatique" className="h-10 w-10 rounded-full object-cover" />
             <span className="font-bold text-lg text-foreground hidden sm:block">IHSI</span>
           </Link>
 
