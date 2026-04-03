@@ -31,8 +31,8 @@ const App = () => (
           <Route path="/publications/:slug" element={<Publications />} />
           <Route path="*" element={<NotFound />} />
         </Routes>
-      </BrowserRouter>
-    </TooltipProvider>
+      </TooltipProvider>
+    </BrowserRouter>
   </QueryClientProvider>
 );
 
