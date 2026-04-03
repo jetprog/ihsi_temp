@@ -8,6 +8,14 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { ChevronLeft, ChevronRight, ArrowLeft, Download, FileText } from "lucide-react";
 
 const types = ["Tous", "Bulletin", "Rapport", "Communiqué", "Méthodologie", "Recensement"];
+
+const categorySlugMap: Record<string, string> = {
+  bulletins: "Bulletin",
+  rapports: "Rapport",
+  communiques: "Communiqué",
+  methodologies: "Méthodologie",
+  recensements: "Recensement",
+};
 const years = ["Toutes", "2025", "2024", "2023", "2022", "2021"];
 
 const publications = [
@@ -27,13 +35,14 @@ const ITEMS_PER_PAGE = 6;
 export default function Publications() {
   const { slug } = useParams<{ slug: string }>();
   const navigate = useNavigate();
-  const [activeFilter, setActiveFilter] = useState("Tous");
+  const categoryType = slug ? categorySlugMap[slug] : undefined;
+  const [activeFilter, setActiveFilter] = useState(categoryType || "Tous");
   const [search, setSearch] = useState("");
   const [selectedYear, setSelectedYear] = useState("Toutes");
   const [page, setPage] = useState(1);
 
-  // Detail view
-  if (slug) {
+  // Detail view (only if slug exists, is NOT a category, and matches a publication)
+  if (slug && !categoryType) {
     const pub = publications.find((p) => p.slug === slug);
     if (!pub) {
       return (
