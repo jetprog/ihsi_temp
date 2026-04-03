@@ -8,6 +8,14 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { ChevronLeft, ChevronRight, ArrowLeft, Download, FileText } from "lucide-react";
 
 const types = ["Tous", "Bulletin", "Rapport", "Communiqué", "Méthodologie", "Recensement"];
+
+const categorySlugMap: Record<string, string> = {
+  bulletins: "Bulletin",
+  rapports: "Rapport",
+  communiques: "Communiqué",
+  methodologies: "Méthodologie",
+  recensements: "Recensement",
+};
 const years = ["Toutes", "2025", "2024", "2023", "2022", "2021"];
 
 const publications = [
