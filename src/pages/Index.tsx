@@ -14,6 +14,7 @@ import {
   AreaChart, Area, BarChart, Bar,
   ResponsiveContainer, XAxis, YAxis, Tooltip, CartesianGrid,
 } from "recharts";
+import heroMapBg from "@/assets/hero-haiti-map.jpg";
 
 const populationData = [
   { year: "2018", value: 11.1 }, { year: "2019", value: 11.3 },
