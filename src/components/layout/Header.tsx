@@ -64,7 +64,10 @@ export function Header() {
           {/* Logo */}
           <Link to="/" className="flex items-center gap-2.5 shrink-0 mr-2">
             <img src={ihsiLogo} alt="IHSI - Institut Haïtien de Statistique et d'Informatique" className="h-10 w-10 rounded-full object-cover" />
-            <span className="font-bold text-lg text-foreground hidden sm:block">IHSI</span>
+            <div className="hidden sm:flex flex-col leading-tight">
+              <span className="font-bold text-base text-foreground">IHSI</span>
+              <span className="text-[10px] text-muted-foreground font-medium">Statistique & Informatique</span>
+            </div>
           </Link>
 
           {/* Desktop nav */}
