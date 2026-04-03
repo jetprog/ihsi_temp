@@ -1,3 +1,3 @@
-# Welcome to your Lovable project
+# IHSI Website (Refactor)
 
-TODO: Document your project here
+Single-page app for the Institut Haïtien de Statistique et d'Informatique (IHSI).
