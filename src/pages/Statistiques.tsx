@@ -7,7 +7,8 @@ import {
   Breadcrumb, BreadcrumbList, BreadcrumbItem, BreadcrumbLink, BreadcrumbSeparator, BreadcrumbPage,
 } from "@/components/ui/breadcrumb";
 import { Table, TableHeader, TableBody, TableRow, TableHead, TableCell } from "@/components/ui/table";
-import { Users, TrendingUp, Briefcase, Heart, MapPin } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import { Users, TrendingUp, Briefcase, Heart, MapPin, Download, FileText } from "lucide-react";
 import {
   Area, AreaChart, Bar, BarChart, ResponsiveContainer, XAxis, YAxis, CartesianGrid, Tooltip,
 } from "recharts";
