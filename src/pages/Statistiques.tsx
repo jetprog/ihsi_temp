@@ -7,7 +7,8 @@ import {
   Breadcrumb, BreadcrumbList, BreadcrumbItem, BreadcrumbLink, BreadcrumbSeparator, BreadcrumbPage,
 } from "@/components/ui/breadcrumb";
 import { Table, TableHeader, TableBody, TableRow, TableHead, TableCell } from "@/components/ui/table";
-import { Users, TrendingUp, Briefcase, Heart, MapPin } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import { Users, TrendingUp, Briefcase, Heart, MapPin, Download, FileText } from "lucide-react";
 import {
   Area, AreaChart, Bar, BarChart, ResponsiveContainer, XAxis, YAxis, CartesianGrid, Tooltip,
 } from "recharts";
@@ -185,6 +186,33 @@ const topics: Record<string, TopicConfig> = {
   },
 };
 
+function exportCSV(topic: TopicConfig) {
+  const headers = topic.tableHeaders.join(",");
+  const rows = topic.tableRows.map((r) => r.map((c) => `"${c}"`).join(",")).join("\n");
+  const csv = `${headers}\n${rows}\nSource: ${topic.source}`;
+  const blob = new Blob(["\uFEFF" + csv], { type: "text/csv;charset=utf-8;" });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement("a");
+  a.href = url;
+  a.download = `${topic.title.toLowerCase()}-ihsi.csv`;
+  a.click();
+  URL.revokeObjectURL(url);
+}
+
+function exportPDF(topic: TopicConfig) {
+  const printWindow = window.open("", "_blank");
+  if (!printWindow) return;
+  const tableHtml = `<table border="1" cellpadding="6" cellspacing="0" style="border-collapse:collapse;width:100%;font-size:13px;">
+    <thead><tr style="background:#f0f0f0;">${topic.tableHeaders.map((h) => `<th style="text-align:left;">${h}</th>`).join("")}</tr></thead>
+    <tbody>${topic.tableRows.map((r) => `<tr>${r.map((c) => `<td>${c}</td>`).join("")}</tr>`).join("")}</tbody>
+  </table>`;
+  printWindow.document.write(`<!DOCTYPE html><html><head><title>${topic.title} — IHSI</title>
+    <style>body{font-family:Arial,sans-serif;padding:40px;color:#222;}h1{font-size:22px;}p{color:#666;font-size:12px;}</style></head>
+    <body><h1>${topic.title}</h1><p>${topic.description}</p><br/>${tableHtml}<br/><p>Source : ${topic.source}</p></body></html>`);
+  printWindow.document.close();
+  printWindow.print();
+}
+
 function TopicPage({ topic }: { topic: TopicConfig }) {
   return (
     <Layout>
@@ -254,7 +282,17 @@ function TopicPage({ topic }: { topic: TopicConfig }) {
 
         {/* Data Table */}
         <div>
-          <h2 className="text-lg font-semibold text-foreground mb-3">Indicateurs détaillés</h2>
+          <div className="flex items-center justify-between mb-3">
+            <h2 className="text-lg font-semibold text-foreground">Indicateurs détaillés</h2>
+            <div className="flex gap-2">
+              <Button variant="outline" size="sm" className="gap-1.5 text-xs" onClick={() => exportCSV(topic)}>
+                <Download className="h-3.5 w-3.5" /> CSV
+              </Button>
+              <Button variant="outline" size="sm" className="gap-1.5 text-xs" onClick={() => exportPDF(topic)}>
+                <FileText className="h-3.5 w-3.5" /> PDF
+              </Button>
+            </div>
+          </div>
           <div className="rounded-lg border overflow-hidden">
             <Table>
               <TableHeader>
