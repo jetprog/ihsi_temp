@@ -7,7 +7,7 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Code, Key, ExternalLink } from "lucide-react";
 
-const categories = ["Tous", "Démographie", "Économie", "Travail", "Social", "Géographie"];
+const categories = ["Tous", "Démographie", "Économie", "Emploi", "Social", "Géographie"];
 const formats = ["CSV", "JSON", "XLSX", "API", "GeoJSON"];
 const frequencies = ["Toutes", "Mensuel", "Trimestriel", "Annuel"];
 
