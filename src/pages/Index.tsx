@@ -53,7 +53,7 @@ const dashboardLinks = [
   { title: "Démographie", href: "/tableaux-de-bord/demographie", icon: Users, description: "Population, migration, natalité", previewValue: "12.0M habitants" },
   { title: "IPC", href: "/tableaux-de-bord/ipc", icon: Activity, description: "Indice des prix à la consommation", previewValue: "24.8% inflation" },
   { title: "PIB", href: "/tableaux-de-bord/pib", icon: DollarSign, description: "Croissance économique nationale", previewValue: "1.8% croissance" },
-  { title: "Travail", href: "/tableaux-de-bord/travail", icon: Briefcase, description: "Emploi, chômage, marché du travail", previewValue: "14.5% chômage" },
+  { title: "Emploi", href: "/tableaux-de-bord/travail", icon: Briefcase, description: "Emploi, chômage, marché du travail", previewValue: "14.5% chômage" },
   { title: "Social", href: "/tableaux-de-bord/social", icon: PieChart, description: "Éducation, santé, pauvreté", previewValue: "72.3% alphabétisation" },
 ];
 
