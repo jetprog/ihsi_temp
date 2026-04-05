@@ -33,7 +33,7 @@ export const navigationItems: NavGroup[] = [
     children: [
       { title: "Démographie", href: "/statistiques/demographie", icon: Users, description: "Population, natalité, mortalité" },
       { title: "Économie", href: "/statistiques/economie", icon: TrendingUp, description: "PIB, commerce, investissements" },
-      { title: "Travail", href: "/statistiques/travail", icon: Briefcase, description: "Emploi, chômage, salaires" },
+      { title: "Emploi", href: "/statistiques/travail", icon: Briefcase, description: "Emploi, chômage, salaires" },
       { title: "Social", href: "/statistiques/social", icon: Heart, description: "Éducation, santé, pauvreté" },
       { title: "Géographique", href: "/statistiques/geographique", icon: MapPin, description: "Données par département" },
       { title: "Enquêtes", href: "/statistiques/enquetes", icon: ClipboardList, description: "Enquêtes et sondages" },
