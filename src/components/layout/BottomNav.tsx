@@ -1,16 +1,18 @@
 import { Link, useLocation } from "react-router-dom";
 import { Home, LayoutDashboard, Database, Search } from "lucide-react";
 import { cn } from "@/lib/utils";
-
-const bottomNavItems = [
-  { label: "Accueil", href: "/", icon: Home },
-  { label: "Tableaux", href: "/tableaux-de-bord", icon: LayoutDashboard },
-  { label: "Données", href: "/donnees-ouvertes", icon: Database },
-  { label: "Recherche", href: "/donnees-ouvertes?q=", icon: Search },
-];
+import { useLanguage } from "@/i18n/context";
 
 export function BottomNav() {
   const location = useLocation();
+  const { t } = useLanguage();
+
+  const bottomNavItems = [
+    { label: t("bottomNav.home"), href: "/", icon: Home },
+    { label: t("bottomNav.dashboards"), href: "/tableaux-de-bord", icon: LayoutDashboard },
+    { label: t("bottomNav.data"), href: "/donnees-ouvertes", icon: Database },
+    { label: t("bottomNav.search"), href: "/donnees-ouvertes?q=", icon: Search },
+  ];
 
   return (
     <nav className="fixed bottom-0 left-0 right-0 z-50 bg-card border-t shadow-[0_-2px_10px_rgba(0,0,0,0.06)] lg:hidden">

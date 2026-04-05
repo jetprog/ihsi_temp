@@ -15,52 +15,13 @@ import {
   ResponsiveContainer, XAxis, YAxis, Tooltip, CartesianGrid,
 } from "recharts";
 import heroMapBg from "@/assets/hero-haiti-map.jpg";
+import { useLanguage } from "@/i18n/context";
 
 const populationData = [
   { year: "2018", value: 11.1 }, { year: "2019", value: 11.3 },
   { year: "2020", value: 11.4 }, { year: "2021", value: 11.6 },
   { year: "2022", value: 11.7 }, { year: "2023", value: 11.9 },
   { year: "2024", value: 12.0 },
-];
-
-const employmentData = [
-  { sector: "Agriculture", value: 38 }, { sector: "Services", value: 42 },
-  { sector: "Industrie", value: 11 }, { sector: "Commerce", value: 9 },
-];
-
-const heroSlides = [
-  {
-    title: "Données statistiques officielles d'Haïti",
-    subtitle: "Accédez aux indicateurs clés, tableaux de bord et publications de l'IHSI",
-    cta: "Explorer les données",
-    href: "/donnees-ouvertes",
-  },
-  {
-    title: "Nouveau : Bulletin trimestriel T4 2024",
-    subtitle: "Analyse des indicateurs macroéconomiques et tendances du marché du travail",
-    cta: "Lire le bulletin",
-    href: "/publications/bulletins",
-  },
-  {
-    title: "API ouverte pour développeurs",
-    subtitle: "Intégrez les données IHSI dans vos applications avec notre API REST",
-    cta: "Voir la documentation",
-    href: "/donnees-ouvertes/api",
-  },
-];
-
-const dashboardLinks = [
-  { title: "Démographie", href: "/tableaux-de-bord/demographie", icon: Users, description: "Population, migration, natalité", previewValue: "12.0M habitants" },
-  { title: "IPC", href: "/tableaux-de-bord/ipc", icon: Activity, description: "Indice des prix à la consommation", previewValue: "24.8% inflation" },
-  { title: "PIB", href: "/tableaux-de-bord/pib", icon: DollarSign, description: "Croissance économique nationale", previewValue: "1.8% croissance" },
-  { title: "Emploi", href: "/tableaux-de-bord/travail", icon: Briefcase, description: "Emploi, chômage, marché du travail", previewValue: "14.5% chômage" },
-  { title: "Social", href: "/tableaux-de-bord/social", icon: PieChart, description: "Éducation, santé, pauvreté", previewValue: "72.3% alphabétisation" },
-];
-
-const quickActions = [
-  { title: "Explorer les données", description: "Parcourir le catalogue de jeux de données", href: "/donnees-ouvertes", icon: Database },
-  { title: "Voir les tableaux de bord", description: "Visualiser les indicateurs clés en temps réel", href: "/tableaux-de-bord", icon: LayoutDashboard },
-  { title: "Dernières publications", description: "Bulletins, rapports et communiqués récents", href: "/publications", icon: BookOpen },
 ];
 
 const latestPublications = [
@@ -88,6 +49,34 @@ export default function Index() {
   const [activeSlide, setActiveSlide] = useState(0);
   const [heroSearch, setHeroSearch] = useState("");
   const navigate = useNavigate();
+  const { t } = useLanguage();
+
+  const heroSlides = [
+    { title: t("hero.slide1Title"), subtitle: t("hero.slide1Subtitle"), cta: t("hero.slide1Cta"), href: "/donnees-ouvertes" },
+    { title: t("hero.slide2Title"), subtitle: t("hero.slide2Subtitle"), cta: t("hero.slide2Cta"), href: "/publications/bulletins" },
+    { title: t("hero.slide3Title"), subtitle: t("hero.slide3Subtitle"), cta: t("hero.slide3Cta"), href: "/donnees-ouvertes/api" },
+  ];
+
+  const employmentData = [
+    { sector: t("index.agriculture"), value: 38 },
+    { sector: t("index.services"), value: 42 },
+    { sector: t("index.industry"), value: 11 },
+    { sector: t("index.commerce"), value: 9 },
+  ];
+
+  const dashboardLinks = [
+    { title: t("index.demoTitle"), href: "/tableaux-de-bord/demographie", icon: Users, description: t("index.demoDesc"), previewValue: t("index.demoPreview") },
+    { title: t("index.ipcTitle"), href: "/tableaux-de-bord/ipc", icon: Activity, description: t("index.ipcDesc"), previewValue: t("index.ipcPreview") },
+    { title: t("index.pibTitle"), href: "/tableaux-de-bord/pib", icon: DollarSign, description: t("index.pibDesc"), previewValue: t("index.pibPreview") },
+    { title: t("index.emploiTitle"), href: "/tableaux-de-bord/travail", icon: Briefcase, description: t("index.emploiDesc"), previewValue: t("index.emploiPreview") },
+    { title: t("index.socialTitle"), href: "/tableaux-de-bord/social", icon: PieChart, description: t("index.socialDesc"), previewValue: t("index.socialPreview") },
+  ];
+
+  const quickActions = [
+    { title: t("index.exploreData"), description: t("index.exploreDataDesc"), href: "/donnees-ouvertes", icon: Database },
+    { title: t("index.viewDashboards"), description: t("index.viewDashboardsDesc"), href: "/tableaux-de-bord", icon: LayoutDashboard },
+    { title: t("index.latestPubs"), description: t("index.latestPubsDesc"), href: "/publications", icon: BookOpen },
+  ];
 
   useEffect(() => {
     const timer = setInterval(() => {
@@ -123,7 +112,6 @@ export default function Index() {
             </p>
           </div>
 
-          {/* Hero Search Bar — large and prominent */}
           <form onSubmit={handleHeroSearch} className="max-w-2xl mb-6">
             <div className="relative">
               <Search className="absolute left-5 top-1/2 -translate-y-1/2 h-5 w-5 text-muted-foreground" />
@@ -131,7 +119,7 @@ export default function Index() {
                 type="text"
                 value={heroSearch}
                 onChange={(e) => setHeroSearch(e.target.value)}
-                placeholder="Rechercher population, IPC, emploi, publications..."
+                placeholder={t("hero.searchPlaceholder")}
                 className="w-full h-14 pl-14 pr-5 rounded-xl bg-background/95 backdrop-blur text-foreground placeholder:text-muted-foreground border-0 ring-1 ring-border/20 focus:ring-2 focus:ring-secondary outline-none text-sm shadow-lg"
               />
               <Button
@@ -139,16 +127,15 @@ export default function Index() {
                 size="sm"
                 className="absolute right-2 top-1/2 -translate-y-1/2 bg-secondary hover:bg-secondary/90 text-secondary-foreground h-10 px-4 rounded-lg"
               >
-                Rechercher
+                {t("common.searchBtn")}
               </Button>
             </div>
           </form>
 
-          {/* Quick action pills */}
           <div className="flex flex-wrap gap-2 mb-6">
             {quickActions.map((action) => (
               <Link
-                key={action.title}
+                key={action.href}
                 to={action.href}
                 className="inline-flex items-center gap-1.5 px-4 py-2 rounded-full bg-primary-foreground/10 text-primary-foreground/90 text-xs font-medium hover:bg-primary-foreground/20 transition-colors"
               >
@@ -158,7 +145,6 @@ export default function Index() {
             ))}
           </div>
 
-          {/* Slide indicators */}
           <div className="flex gap-2">
             {heroSlides.map((_, i) => (
               <button
@@ -177,29 +163,29 @@ export default function Index() {
       <section className="container -mt-6 relative z-10">
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
           <Link to="/statistiques/demographie">
-            <StatCard label="Population" value="12.0M" trend="up" trendValue="+1.4%" sparklineData={[10.8, 11.0, 11.1, 11.3, 11.4, 11.6, 11.7, 11.9, 12.0]} icon={<Users className="h-4 w-4" />} />
+            <StatCard label={t("index.population")} value="12.0M" trend="up" trendValue="+1.4%" sparklineData={[10.8, 11.0, 11.1, 11.3, 11.4, 11.6, 11.7, 11.9, 12.0]} icon={<Users className="h-4 w-4" />} />
           </Link>
           <Link to="/statistiques/economie">
-            <StatCard label="Inflation (IPC)" value="24.8%" trend="down" trendValue="-2.1 pts" sparklineData={[28, 27, 26.5, 26, 25.5, 25, 24.8]} icon={<Activity className="h-4 w-4" />} />
+            <StatCard label={t("index.inflationCPI")} value="24.8%" trend="down" trendValue="-2.1 pts" sparklineData={[28, 27, 26.5, 26, 25.5, 25, 24.8]} icon={<Activity className="h-4 w-4" />} />
           </Link>
           <Link to="/statistiques/travail">
-            <StatCard label="Taux de chômage" value="14.5%" trend="neutral" trendValue="0.0 pts" sparklineData={[15, 14.8, 14.6, 14.5, 14.5, 14.6, 14.5]} icon={<Briefcase className="h-4 w-4" />} />
+            <StatCard label={t("index.unemploymentRate")} value="14.5%" trend="neutral" trendValue="0.0 pts" sparklineData={[15, 14.8, 14.6, 14.5, 14.5, 14.6, 14.5]} icon={<Briefcase className="h-4 w-4" />} />
           </Link>
           <Link to="/statistiques/economie">
-            <StatCard label="Croissance PIB" value="1.8%" trend="up" trendValue="+0.5 pts" sparklineData={[0.5, 0.8, 1.0, 1.2, 1.3, 1.5, 1.8]} icon={<TrendingUp className="h-4 w-4" />} />
+            <StatCard label={t("index.gdpGrowth")} value="1.8%" trend="up" trendValue="+0.5 pts" sparklineData={[0.5, 0.8, 1.0, 1.2, 1.3, 1.5, 1.8]} icon={<TrendingUp className="h-4 w-4" />} />
           </Link>
         </div>
       </section>
 
-      {/* Dashboard Quick Links — 3 col grid, bigger cards */}
+      {/* Dashboard Quick Links */}
       <section className="container py-12">
         <div className="flex items-center justify-between mb-6">
           <div>
-            <h2 className="text-xl font-bold text-foreground tracking-tight">Tableaux de bord</h2>
-            <p className="text-sm text-muted-foreground mt-1">Explorez les indicateurs clés en temps réel</p>
+            <h2 className="text-xl font-bold text-foreground tracking-tight">{t("index.dashboardsTitle")}</h2>
+            <p className="text-sm text-muted-foreground mt-1">{t("index.dashboardsSubtitle")}</p>
           </div>
           <Button variant="ghost" size="sm" asChild className="gap-1 text-secondary">
-            <Link to="/tableaux-de-bord">Voir tout <ArrowRight className="h-3 w-3" /></Link>
+            <Link to="/tableaux-de-bord">{t("common.seeAll")} <ArrowRight className="h-3 w-3" /></Link>
           </Button>
         </div>
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
@@ -216,16 +202,16 @@ export default function Index() {
         </div>
       </section>
 
-      {/* Latest Publications — BEFORE Tendances */}
+      {/* Latest Publications */}
       <section className="bg-muted/30">
         <div className="container py-12">
           <div className="flex items-center justify-between mb-6">
             <div>
-              <h2 className="text-xl font-bold text-foreground tracking-tight">Dernières publications</h2>
-              <p className="text-sm text-muted-foreground mt-1">Bulletins, rapports et communiqués récents</p>
+              <h2 className="text-xl font-bold text-foreground tracking-tight">{t("index.latestPubs")}</h2>
+              <p className="text-sm text-muted-foreground mt-1">{t("index.latestPubsDesc")}</p>
             </div>
             <Button variant="ghost" size="sm" asChild className="gap-1 text-secondary">
-              <Link to="/publications">Toutes les publications <ArrowRight className="h-3 w-3" /></Link>
+              <Link to="/publications">{t("index.seeAllPubs")} <ArrowRight className="h-3 w-3" /></Link>
             </Button>
           </div>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
@@ -236,12 +222,12 @@ export default function Index() {
         </div>
       </section>
 
-      {/* Key Trends — AFTER Publications */}
+      {/* Key Trends */}
       <section>
         <div className="container py-12">
-          <h2 className="text-xl font-bold text-foreground mb-6 tracking-tight">Tendances clés</h2>
+          <h2 className="text-xl font-bold text-foreground mb-6 tracking-tight">{t("index.keyTrends")}</h2>
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-            <ChartContainer title="Évolution de la population" subtitle="En millions d'habitants, 2018–2024" source="IHSI, Estimations de population">
+            <ChartContainer title={t("index.populationEvolution")} subtitle={t("index.populationSubtitle")} source={t("index.populationSource")}>
               <ResponsiveContainer width="100%" height="100%">
                 <AreaChart data={populationData}>
                   <CartesianGrid strokeDasharray="3 3" stroke="hsl(var(--border))" />
@@ -259,7 +245,7 @@ export default function Index() {
               </ResponsiveContainer>
             </ChartContainer>
 
-            <ChartContainer title="Emploi par secteur" subtitle="Répartition en pourcentage, 2024" source="IHSI, Enquête emploi 2024">
+            <ChartContainer title={t("index.employmentBySector")} subtitle={t("index.employmentSubtitle")} source={t("index.employmentSource")}>
               <ResponsiveContainer width="100%" height="100%">
                 <BarChart data={employmentData} layout="vertical">
                   <CartesianGrid strokeDasharray="3 3" stroke="hsl(var(--border))" />

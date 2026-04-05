@@ -2,6 +2,7 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Download, Eye, Calendar } from "lucide-react";
+import { useLanguage } from "@/i18n/context";
 
 interface DatasetCardProps {
   title: string;
@@ -12,6 +13,8 @@ interface DatasetCardProps {
 }
 
 export function DatasetCard({ title, description, formats, date, category }: DatasetCardProps) {
+  const { t } = useLanguage();
+
   return (
     <Card className="group hover:shadow-md transition-shadow">
       <CardContent className="p-5">
@@ -35,11 +38,11 @@ export function DatasetCard({ title, description, formats, date, category }: Dat
           <div className="flex gap-1">
             <Button variant="ghost" size="sm" className="h-7 text-xs gap-1">
               <Eye className="h-3 w-3" />
-              Aperçu
+              {t("common.preview")}
             </Button>
             <Button variant="outline" size="sm" className="h-7 text-xs gap-1">
               <Download className="h-3 w-3" />
-              Télécharger
+              {t("common.download")}
             </Button>
           </div>
         </div>

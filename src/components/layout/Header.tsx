@@ -1,4 +1,3 @@
-import { useState } from "react";
 import { Link, useLocation } from "react-router-dom";
 import { Menu, Search, Globe } from "lucide-react";
 import ihsiLogo from "@/assets/ihsi-75th-logo.jpeg";
@@ -9,34 +8,33 @@ import { navigationItems } from "@/lib/navigation";
 import { MegaMenu } from "./MegaMenu";
 import { MobileNav } from "./MobileNav";
 import { cn } from "@/lib/utils";
+import { useLanguage, type Lang } from "@/i18n/context";
 
-const languages = [
+const languages: { code: Lang; label: string }[] = [
   { code: "FR", label: "Français" },
   { code: "HT", label: "Kreyòl" },
   { code: "EN", label: "English" },
 ];
 
 export function Header() {
-  const [lang, setLang] = useState("FR");
+  const { lang, setLang, t } = useLanguage();
   const location = useLocation();
 
   return (
     <header className="sticky top-0 z-50 w-full">
-      {/* Skip to content */}
       <a
         href="#main-content"
         className="sr-only focus:not-sr-only focus:absolute focus:top-2 focus:left-2 focus:z-[100] focus:bg-primary focus:text-primary-foreground focus:px-4 focus:py-2 focus:rounded-md"
       >
-        Aller au contenu principal
+        {t("header.skipToContent")}
       </a>
 
-      {/* Utility bar */}
       <div className="bg-primary text-primary-foreground">
         <div className="container flex h-9 items-center justify-between text-xs">
           <span className="font-medium tracking-wide hidden sm:block">
-            Institut Haïtien de Statistique et d'Informatique
+            {t("header.fullName")}
           </span>
-          <span className="font-medium tracking-wide sm:hidden">IHSI</span>
+          <span className="font-medium tracking-wide sm:hidden">{t("header.shortName")}</span>
           <div className="flex items-center gap-1">
             <Globe className="h-3.5 w-3.5 mr-1 opacity-70" />
             {languages.map((l) => (
@@ -58,37 +56,32 @@ export function Header() {
         </div>
       </div>
 
-      {/* Main nav */}
       <div className="bg-card border-b shadow-sm">
         <div className="container flex h-14 items-center gap-4">
-          {/* Logo */}
           <Link to="/" className="flex items-center gap-2.5 shrink-0 mr-2">
-            <img src={ihsiLogo} alt="IHSI - Institut Haïtien de Statistique et d'Informatique" className="h-14 w-14 rounded-full object-cover" />
+            <img src={ihsiLogo} alt={t("header.fullName")} className="h-14 w-14 rounded-full object-cover" />
             <div className="flex flex-col leading-tight">
-              <span className="font-bold text-lg text-foreground">IHSI</span>
-              <span className="text-[10px] text-muted-foreground font-medium">Statistique & Informatique</span>
+              <span className="font-bold text-lg text-foreground">{t("header.shortName")}</span>
+              <span className="text-[10px] text-muted-foreground font-medium">{t("header.tagline")}</span>
             </div>
           </Link>
 
-          {/* Desktop nav */}
           <nav className="hidden lg:flex items-center gap-0.5 flex-1">
             {navigationItems.map((item) => (
               <MegaMenu key={item.title} item={item} currentPath={location.pathname} />
             ))}
           </nav>
 
-          {/* Always-visible search */}
           <div className="flex-1 max-w-xs hidden md:block">
             <div className="relative">
               <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-3.5 w-3.5 text-muted-foreground" />
               <Input
-                placeholder="Rechercher..."
+                placeholder={t("common.search")}
                 className="pl-9 h-9 text-sm bg-muted/50 border-transparent focus:border-border focus:bg-card transition-colors"
               />
             </div>
           </div>
 
-          {/* Mobile search + menu */}
           <div className="flex items-center gap-1 ml-auto lg:ml-0">
             <Button variant="ghost" size="icon" className="md:hidden h-9 w-9">
               <Search className="h-4 w-4" />
@@ -102,7 +95,7 @@ export function Header() {
               </SheetTrigger>
               <SheetContent side="left" className="w-80 p-0">
                 <SheetHeader className="p-4 border-b">
-                  <SheetTitle className="text-left">Menu</SheetTitle>
+                  <SheetTitle className="text-left">{t("header.menu")}</SheetTitle>
                 </SheetHeader>
                 <MobileNav currentPath={location.pathname} />
               </SheetContent>
