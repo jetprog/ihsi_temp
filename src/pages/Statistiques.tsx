@@ -279,33 +279,42 @@ function TopicPage({ topic }: { topic: TopicConfig }) {
         </div>
 
         {/* Chart */}
-        <ChartContainer title={topic.chartTitle} source={topic.source}>
-          <ResponsiveContainer width="100%" height="100%">
-            {topic.chartType === "area" ? (
-              <AreaChart data={topic.chartData}>
-                <defs>
-                  <linearGradient id="topicGrad" x1="0" y1="0" x2="0" y2="1">
-                    <stop offset="0%" stopColor="hsl(var(--secondary))" stopOpacity={0.3} />
-                    <stop offset="100%" stopColor="hsl(var(--secondary))" stopOpacity={0} />
-                  </linearGradient>
-                </defs>
-                <CartesianGrid strokeDasharray="3 3" stroke="hsl(var(--border))" />
-                <XAxis dataKey={topic.chartXKey} tick={{ fontSize: 12 }} stroke="hsl(var(--muted-foreground))" />
-                <YAxis tick={{ fontSize: 12 }} stroke="hsl(var(--muted-foreground))" />
-                <Tooltip />
-                <Area type="monotone" dataKey={topic.chartDataKey} stroke="hsl(var(--secondary))" fill="url(#topicGrad)" strokeWidth={2} />
-              </AreaChart>
-            ) : (
-              <BarChart data={topic.chartData}>
-                <CartesianGrid strokeDasharray="3 3" stroke="hsl(var(--border))" />
-                <XAxis dataKey={topic.chartXKey} tick={{ fontSize: 11 }} stroke="hsl(var(--muted-foreground))" />
-                <YAxis tick={{ fontSize: 12 }} stroke="hsl(var(--muted-foreground))" />
-                <Tooltip />
-                <Bar dataKey={topic.chartDataKey} fill="hsl(var(--secondary))" radius={[4, 4, 0, 0]} />
-              </BarChart>
-            )}
-          </ResponsiveContainer>
-        </ChartContainer>
+        <div>
+          <div className="flex items-center justify-end mb-2">
+            <Button variant="outline" size="sm" className="gap-1.5 text-xs" onClick={exportChartPNG}>
+              <Image className="h-3.5 w-3.5" /> PNG
+            </Button>
+          </div>
+          <div ref={chartRef}>
+            <ChartContainer title={topic.chartTitle} source={topic.source}>
+              <ResponsiveContainer width="100%" height="100%">
+                {topic.chartType === "area" ? (
+                  <AreaChart data={topic.chartData}>
+                    <defs>
+                      <linearGradient id="topicGrad" x1="0" y1="0" x2="0" y2="1">
+                        <stop offset="0%" stopColor="hsl(var(--secondary))" stopOpacity={0.3} />
+                        <stop offset="100%" stopColor="hsl(var(--secondary))" stopOpacity={0} />
+                      </linearGradient>
+                    </defs>
+                    <CartesianGrid strokeDasharray="3 3" stroke="hsl(var(--border))" />
+                    <XAxis dataKey={topic.chartXKey} tick={{ fontSize: 12 }} stroke="hsl(var(--muted-foreground))" />
+                    <YAxis tick={{ fontSize: 12 }} stroke="hsl(var(--muted-foreground))" />
+                    <Tooltip />
+                    <Area type="monotone" dataKey={topic.chartDataKey} stroke="hsl(var(--secondary))" fill="url(#topicGrad)" strokeWidth={2} />
+                  </AreaChart>
+                ) : (
+                  <BarChart data={topic.chartData}>
+                    <CartesianGrid strokeDasharray="3 3" stroke="hsl(var(--border))" />
+                    <XAxis dataKey={topic.chartXKey} tick={{ fontSize: 11 }} stroke="hsl(var(--muted-foreground))" />
+                    <YAxis tick={{ fontSize: 12 }} stroke="hsl(var(--muted-foreground))" />
+                    <Tooltip />
+                    <Bar dataKey={topic.chartDataKey} fill="hsl(var(--secondary))" radius={[4, 4, 0, 0]} />
+                  </BarChart>
+                )}
+              </ResponsiveContainer>
+            </ChartContainer>
+          </div>
+        </div>
 
         {/* Data Table */}
         <div>
