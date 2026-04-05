@@ -1,3 +1,4 @@
+import { useRef } from "react";
 import { Link, useParams } from "react-router-dom";
 import { Layout } from "@/components/layout/Layout";
 import { navigationItems } from "@/lib/navigation";
@@ -8,7 +9,7 @@ import {
 } from "@/components/ui/breadcrumb";
 import { Table, TableHeader, TableBody, TableRow, TableHead, TableCell } from "@/components/ui/table";
 import { Button } from "@/components/ui/button";
-import { Users, TrendingUp, Briefcase, Heart, MapPin, Download, FileText } from "lucide-react";
+import { Users, TrendingUp, Briefcase, Heart, MapPin, Download, FileText, Image } from "lucide-react";
 import {
   Area, AreaChart, Bar, BarChart, ResponsiveContainer, XAxis, YAxis, CartesianGrid, Tooltip,
 } from "recharts";
