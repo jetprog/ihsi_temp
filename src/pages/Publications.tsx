@@ -7,8 +7,7 @@ import { Button } from "@/components/ui/button";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { ChevronLeft, ChevronRight, ArrowLeft, Download, FileText, Eye } from "lucide-react";
-
-const types = ["Tous", "Bulletin", "Rapport", "Communiqué", "Méthodologie", "Recensement"];
+import { useLanguage } from "@/i18n/context";
 
 const categorySlugMap: Record<string, string> = {
   bulletins: "Bulletin",
@@ -17,8 +16,9 @@ const categorySlugMap: Record<string, string> = {
   methodologies: "Méthodologie",
   recensements: "Recensement",
 };
+
 const years = ["Toutes", "2025", "2024", "2023", "2022", "2021"];
-const frequencies = ["Toutes", "Mensuel", "Trimestriel", "Annuel"];
+const frequencyValues = ["Toutes", "Mensuel", "Trimestriel", "Annuel"];
 
 const publications = [
   { title: "Bulletin trimestriel des statistiques — T4 2024", type: "Bulletin", date: "Mars 2025", excerpt: "Analyse des principaux indicateurs économiques et sociaux du quatrième trimestre 2024.", downloadUrl: "#", slug: "bulletin-t4-2024", fullSummary: "Ce bulletin présente une analyse détaillée des principaux indicateurs macroéconomiques et sociaux pour le quatrième trimestre 2024. Il couvre l'évolution du PIB, les tendances de l'emploi, l'inflation mesurée par l'IPC, ainsi que les indicateurs de commerce extérieur. Les données montrent une légère reprise économique avec une croissance du PIB de 1.8% en glissement annuel.", relatedDashboard: "/tableaux-de-bord/ipc", year: "2025", frequency: "Trimestriel" },
@@ -37,6 +37,7 @@ const ITEMS_PER_PAGE = 6;
 export default function Publications() {
   const { slug } = useParams<{ slug: string }>();
   const navigate = useNavigate();
+  const { t } = useLanguage();
   const categoryType = slug ? categorySlugMap[slug] : undefined;
   const [activeFilter, setActiveFilter] = useState(categoryType || "Tous");
   const [search, setSearch] = useState("");
@@ -45,16 +46,33 @@ export default function Publications() {
   const [page, setPage] = useState(1);
   const [previewPub, setPreviewPub] = useState<typeof publications[0] | null>(null);
 
-  // Detail view (only if slug exists, is NOT a category, and matches a publication)
+  const types = [
+    t("publications.all"),
+    t("publications.bulletin"),
+    t("publications.report"),
+    t("publications.pressRelease"),
+    t("publications.methodology"),
+    t("publications.census"),
+  ];
+
+  const typeMap: Record<string, string> = {
+    [t("publications.bulletin")]: "Bulletin",
+    [t("publications.report")]: "Rapport",
+    [t("publications.pressRelease")]: "Communiqué",
+    [t("publications.methodology")]: "Méthodologie",
+    [t("publications.census")]: "Recensement",
+  };
+
+  // Detail view
   if (slug && !categoryType) {
     const pub = publications.find((p) => p.slug === slug);
     if (!pub) {
       return (
         <Layout>
           <div className="container py-16 text-center">
-            <p className="text-muted-foreground">Publication introuvable.</p>
+            <p className="text-muted-foreground">{t("publications.notFound")}</p>
             <Button variant="outline" className="mt-4" onClick={() => navigate("/publications")}>
-              Retour aux publications
+              {t("publications.backToPublications")}
             </Button>
           </div>
         </Layout>
@@ -65,7 +83,7 @@ export default function Publications() {
       <Layout>
         <div className="container py-8 max-w-3xl">
           <Button variant="ghost" size="sm" className="gap-1.5 mb-6 -ml-2" onClick={() => navigate("/publications")}>
-            <ArrowLeft className="h-4 w-4" /> Retour aux publications
+            <ArrowLeft className="h-4 w-4" /> {t("publications.backToPublications")}
           </Button>
 
           <div className="flex items-center gap-2 mb-3">
@@ -84,23 +102,22 @@ export default function Publications() {
           <div className="flex flex-wrap gap-3 mb-8">
             <Button className="gap-2" asChild>
               <a href={pub.downloadUrl}>
-                <Download className="h-4 w-4" /> Télécharger le PDF
+                <Download className="h-4 w-4" /> {t("publications.downloadPdf")}
               </a>
             </Button>
             {pub.relatedDashboard && (
               <Button variant="outline" className="gap-2" asChild>
                 <Link to={pub.relatedDashboard}>
-                  <FileText className="h-4 w-4" /> Voir le tableau de bord
+                  <FileText className="h-4 w-4" /> {t("publications.viewDashboard")}
                 </Link>
               </Button>
             )}
           </div>
 
-          {/* Source */}
           <div className="rounded-lg border bg-muted/30 p-4">
             <p className="text-xs text-muted-foreground">
-              <strong>Source :</strong> Institut Haïtien de Statistique et d'Informatique (IHSI)
-              &nbsp;·&nbsp; <strong>Date :</strong> {pub.date}
+              <strong>{t("publications.sourceLabel")}</strong> {t("publications.sourceValue")}
+              &nbsp;·&nbsp; <strong>{t("publications.dateLabel")}</strong> {pub.date}
             </p>
           </div>
         </div>
@@ -110,7 +127,7 @@ export default function Publications() {
 
   // List view
   const filtered = publications.filter((p) => {
-    const matchType = activeFilter === "Tous" || p.type === activeFilter;
+    const matchType = activeFilter === types[0] || p.type === (typeMap[activeFilter] || activeFilter);
     const matchSearch = !search || p.title.toLowerCase().includes(search.toLowerCase());
     const matchYear = selectedYear === "Toutes" || p.year === selectedYear;
     const matchFreq = selectedFrequency === "Toutes" || p.frequency === selectedFrequency;
@@ -123,9 +140,9 @@ export default function Publications() {
   return (
     <Layout>
       <section className="container py-8">
-        <h1 className="text-3xl font-bold text-foreground mb-2">Publications</h1>
+        <h1 className="text-3xl font-bold text-foreground mb-2">{t("publications.title")}</h1>
         <p className="text-muted-foreground mb-8 max-w-2xl">
-          Bulletins, rapports, communiqués et notes méthodologiques publiés par l'IHSI.
+          {t("publications.subtitle")}
         </p>
 
         <div className="flex flex-wrap items-end gap-4 mb-6">
@@ -136,26 +153,26 @@ export default function Publications() {
               onFilterChange={(f) => { setActiveFilter(f); setPage(1); }}
               searchValue={search}
               onSearchChange={(v) => { setSearch(v); setPage(1); }}
-              searchPlaceholder="Rechercher une publication..."
+              searchPlaceholder={t("publications.searchPlaceholder")}
             />
           </div>
           <Select value={selectedFrequency} onValueChange={(v) => { setSelectedFrequency(v); setPage(1); }}>
             <SelectTrigger className="w-32 h-9">
-              <SelectValue placeholder="Périodicité" />
+              <SelectValue placeholder={t("publications.periodicity")} />
             </SelectTrigger>
             <SelectContent>
-              {frequencies.map((f) => (
-                <SelectItem key={f} value={f}>{f === "Toutes" ? "Toutes périodes" : f}</SelectItem>
+              {frequencyValues.map((f) => (
+                <SelectItem key={f} value={f}>{f === "Toutes" ? t("common.allPeriods") : f}</SelectItem>
               ))}
             </SelectContent>
           </Select>
           <Select value={selectedYear} onValueChange={(v) => { setSelectedYear(v); setPage(1); }}>
             <SelectTrigger className="w-28 h-9">
-              <SelectValue placeholder="Année" />
+              <SelectValue placeholder={t("common.year")} />
             </SelectTrigger>
             <SelectContent>
               {years.map((y) => (
-                <SelectItem key={y} value={y}>{y === "Toutes" ? "Toutes les années" : y}</SelectItem>
+                <SelectItem key={y} value={y}>{y === "Toutes" ? t("common.allYears") : y}</SelectItem>
               ))}
             </SelectContent>
           </Select>
@@ -174,14 +191,14 @@ export default function Publications() {
                   className="gap-1.5 text-xs bg-card shadow-sm"
                   onClick={(e) => { e.stopPropagation(); setPreviewPub(pub); }}
                 >
-                  <Eye className="h-3.5 w-3.5" /> Aperçu
+                  <Eye className="h-3.5 w-3.5" /> {t("common.preview")}
                 </Button>
               </div>
             </div>
           ))}
           {paginated.length === 0 && (
             <div className="text-center py-12 text-muted-foreground">
-              Aucune publication trouvée.
+              {t("publications.noResults")}
             </div>
           )}
         </div>
@@ -222,11 +239,11 @@ export default function Publications() {
               <div className="flex gap-2 pt-2">
                 <Button className="gap-2" size="sm" asChild>
                   <a href={previewPub.downloadUrl}>
-                    <Download className="h-4 w-4" /> Télécharger
+                    <Download className="h-4 w-4" /> {t("common.download")}
                   </a>
                 </Button>
                 <Button variant="outline" size="sm" className="gap-2" onClick={() => { setPreviewPub(null); navigate(`/publications/${previewPub.slug}`); }}>
-                  <FileText className="h-4 w-4" /> Lire en détail
+                  <FileText className="h-4 w-4" /> {t("common.readMore")}
                 </Button>
               </div>
             </div>
