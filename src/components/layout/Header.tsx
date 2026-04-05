@@ -63,9 +63,9 @@ export function Header() {
         <div className="container flex h-14 items-center gap-4">
           {/* Logo */}
           <Link to="/" className="flex items-center gap-2.5 shrink-0 mr-2">
-            <img src={ihsiLogo} alt="IHSI - Institut Haïtien de Statistique et d'Informatique" className="h-10 w-10 rounded-full object-cover" />
-            <div className="hidden sm:flex flex-col leading-tight">
-              <span className="font-bold text-base text-foreground">IHSI</span>
+            <img src={ihsiLogo} alt="IHSI - Institut Haïtien de Statistique et d'Informatique" className="h-14 w-14 rounded-full object-cover" />
+            <div className="flex flex-col leading-tight">
+              <span className="font-bold text-lg text-foreground">IHSI</span>
               <span className="text-[10px] text-muted-foreground font-medium">Statistique & Informatique</span>
             </div>
           </Link>

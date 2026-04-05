@@ -1,3 +1,4 @@
+import { useRef } from "react";
 import { Link, useParams } from "react-router-dom";
 import { Layout } from "@/components/layout/Layout";
 import { navigationItems } from "@/lib/navigation";
@@ -8,7 +9,7 @@ import {
 } from "@/components/ui/breadcrumb";
 import { Table, TableHeader, TableBody, TableRow, TableHead, TableCell } from "@/components/ui/table";
 import { Button } from "@/components/ui/button";
-import { Users, TrendingUp, Briefcase, Heart, MapPin, Download, FileText } from "lucide-react";
+import { Users, TrendingUp, Briefcase, Heart, MapPin, Download, FileText, Image } from "lucide-react";
 import {
   Area, AreaChart, Bar, BarChart, ResponsiveContainer, XAxis, YAxis, CartesianGrid, Tooltip,
 } from "recharts";
@@ -90,7 +91,7 @@ const topics: Record<string, TopicConfig> = {
     source: "BRH — Rapports économiques, IHSI — Comptes nationaux",
   },
   travail: {
-    title: "Travail",
+    title: "Emploi",
     description: "Statistiques sur l'emploi, le chômage, le marché du travail et les conditions de travail.",
     icon: <Briefcase className="h-5 w-5" />,
     kpis: [
@@ -214,6 +215,32 @@ function exportPDF(topic: TopicConfig) {
 }
 
 function TopicPage({ topic }: { topic: TopicConfig }) {
+  const chartRef = useRef<HTMLDivElement>(null);
+
+  const exportChartPNG = () => {
+    if (!chartRef.current) return;
+    const svg = chartRef.current.querySelector("svg");
+    if (!svg) return;
+    const svgData = new XMLSerializer().serializeToString(svg);
+    const canvas = document.createElement("canvas");
+    const svgRect = svg.getBoundingClientRect();
+    canvas.width = svgRect.width * 2;
+    canvas.height = svgRect.height * 2;
+    const ctx = canvas.getContext("2d");
+    if (!ctx) return;
+    ctx.scale(2, 2);
+    const img = new window.Image();
+    img.onload = () => {
+      ctx.fillStyle = "#ffffff";
+      ctx.fillRect(0, 0, canvas.width, canvas.height);
+      ctx.drawImage(img, 0, 0);
+      const a = document.createElement("a");
+      a.download = `${topic.title.toLowerCase()}-graphique-ihsi.png`;
+      a.href = canvas.toDataURL("image/png");
+      a.click();
+    };
+    img.src = "data:image/svg+xml;base64," + btoa(unescape(encodeURIComponent(svgData)));
+  };
   return (
     <Layout>
       <section className="bg-primary text-primary-foreground py-6">
@@ -252,33 +279,42 @@ function TopicPage({ topic }: { topic: TopicConfig }) {
         </div>
 
         {/* Chart */}
-        <ChartContainer title={topic.chartTitle} source={topic.source}>
-          <ResponsiveContainer width="100%" height="100%">
-            {topic.chartType === "area" ? (
-              <AreaChart data={topic.chartData}>
-                <defs>
-                  <linearGradient id="topicGrad" x1="0" y1="0" x2="0" y2="1">
-                    <stop offset="0%" stopColor="hsl(var(--secondary))" stopOpacity={0.3} />
-                    <stop offset="100%" stopColor="hsl(var(--secondary))" stopOpacity={0} />
-                  </linearGradient>
-                </defs>
-                <CartesianGrid strokeDasharray="3 3" stroke="hsl(var(--border))" />
-                <XAxis dataKey={topic.chartXKey} tick={{ fontSize: 12 }} stroke="hsl(var(--muted-foreground))" />
-                <YAxis tick={{ fontSize: 12 }} stroke="hsl(var(--muted-foreground))" />
-                <Tooltip />
-                <Area type="monotone" dataKey={topic.chartDataKey} stroke="hsl(var(--secondary))" fill="url(#topicGrad)" strokeWidth={2} />
-              </AreaChart>
-            ) : (
-              <BarChart data={topic.chartData}>
-                <CartesianGrid strokeDasharray="3 3" stroke="hsl(var(--border))" />
-                <XAxis dataKey={topic.chartXKey} tick={{ fontSize: 11 }} stroke="hsl(var(--muted-foreground))" />
-                <YAxis tick={{ fontSize: 12 }} stroke="hsl(var(--muted-foreground))" />
-                <Tooltip />
-                <Bar dataKey={topic.chartDataKey} fill="hsl(var(--secondary))" radius={[4, 4, 0, 0]} />
-              </BarChart>
-            )}
-          </ResponsiveContainer>
-        </ChartContainer>
+        <div>
+          <div className="flex items-center justify-end mb-2">
+            <Button variant="outline" size="sm" className="gap-1.5 text-xs" onClick={exportChartPNG}>
+              <Image className="h-3.5 w-3.5" /> PNG
+            </Button>
+          </div>
+          <div ref={chartRef}>
+            <ChartContainer title={topic.chartTitle} source={topic.source}>
+              <ResponsiveContainer width="100%" height="100%">
+                {topic.chartType === "area" ? (
+                  <AreaChart data={topic.chartData}>
+                    <defs>
+                      <linearGradient id="topicGrad" x1="0" y1="0" x2="0" y2="1">
+                        <stop offset="0%" stopColor="hsl(var(--secondary))" stopOpacity={0.3} />
+                        <stop offset="100%" stopColor="hsl(var(--secondary))" stopOpacity={0} />
+                      </linearGradient>
+                    </defs>
+                    <CartesianGrid strokeDasharray="3 3" stroke="hsl(var(--border))" />
+                    <XAxis dataKey={topic.chartXKey} tick={{ fontSize: 12 }} stroke="hsl(var(--muted-foreground))" />
+                    <YAxis tick={{ fontSize: 12 }} stroke="hsl(var(--muted-foreground))" />
+                    <Tooltip />
+                    <Area type="monotone" dataKey={topic.chartDataKey} stroke="hsl(var(--secondary))" fill="url(#topicGrad)" strokeWidth={2} />
+                  </AreaChart>
+                ) : (
+                  <BarChart data={topic.chartData}>
+                    <CartesianGrid strokeDasharray="3 3" stroke="hsl(var(--border))" />
+                    <XAxis dataKey={topic.chartXKey} tick={{ fontSize: 11 }} stroke="hsl(var(--muted-foreground))" />
+                    <YAxis tick={{ fontSize: 12 }} stroke="hsl(var(--muted-foreground))" />
+                    <Tooltip />
+                    <Bar dataKey={topic.chartDataKey} fill="hsl(var(--secondary))" radius={[4, 4, 0, 0]} />
+                  </BarChart>
+                )}
+              </ResponsiveContainer>
+            </ChartContainer>
+          </div>
+        </div>
 
         {/* Data Table */}
         <div>

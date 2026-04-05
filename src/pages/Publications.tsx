@@ -5,7 +5,8 @@ import { PublicationCard } from "@/components/shared/PublicationCard";
 import { FilterBar } from "@/components/shared/FilterBar";
 import { Button } from "@/components/ui/button";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { ChevronLeft, ChevronRight, ArrowLeft, Download, FileText } from "lucide-react";
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
+import { ChevronLeft, ChevronRight, ArrowLeft, Download, FileText, Eye } from "lucide-react";
 
 const types = ["Tous", "Bulletin", "Rapport", "Communiqué", "Méthodologie", "Recensement"];
 
@@ -17,17 +18,18 @@ const categorySlugMap: Record<string, string> = {
   recensements: "Recensement",
 };
 const years = ["Toutes", "2025", "2024", "2023", "2022", "2021"];
+const frequencies = ["Toutes", "Mensuel", "Trimestriel", "Annuel"];
 
 const publications = [
-  { title: "Bulletin trimestriel des statistiques — T4 2024", type: "Bulletin", date: "Mars 2025", excerpt: "Analyse des principaux indicateurs économiques et sociaux du quatrième trimestre 2024.", downloadUrl: "#", slug: "bulletin-t4-2024", fullSummary: "Ce bulletin présente une analyse détaillée des principaux indicateurs macroéconomiques et sociaux pour le quatrième trimestre 2024. Il couvre l'évolution du PIB, les tendances de l'emploi, l'inflation mesurée par l'IPC, ainsi que les indicateurs de commerce extérieur. Les données montrent une légère reprise économique avec une croissance du PIB de 1.8% en glissement annuel.", relatedDashboard: "/tableaux-de-bord/ipc", year: "2025" },
-  { title: "Rapport annuel sur l'emploi en Haïti 2024", type: "Rapport", date: "Février 2025", excerpt: "État complet du marché du travail avec analyse par secteur et département.", downloadUrl: "#", slug: "rapport-emploi-2024", fullSummary: "Ce rapport offre une vue exhaustive du marché du travail haïtien en 2024. Il analyse le taux de chômage par département, la répartition sectorielle de l'emploi, le sous-emploi et l'emploi informel. Des recommandations de politique publique sont formulées pour améliorer les conditions de travail.", relatedDashboard: "/tableaux-de-bord/travail", year: "2025" },
-  { title: "Communiqué IPC — Février 2025", type: "Communiqué", date: "Mars 2025", excerpt: "L'IPC a enregistré une hausse de 1.2% en février, portant l'inflation annuelle à 24.8%.", downloadUrl: "#", slug: "communique-ipc-fev-2025", fullSummary: "L'Indice des prix à la consommation a augmenté de 1.2% au mois de février 2025 par rapport au mois précédent. En glissement annuel, l'inflation atteint 24.8%, en baisse de 2.1 points par rapport à l'année précédente. Les hausses les plus marquées concernent les produits alimentaires (+28.3%) et le transport (+18.7%).", relatedDashboard: "/tableaux-de-bord/ipc", year: "2025" },
-  { title: "Note méthodologique : Calcul de l'IPC base 2020", type: "Méthodologie", date: "Janvier 2025", excerpt: "Présentation de la méthodologie de calcul de l'indice des prix à la consommation.", downloadUrl: "#", slug: "methodologie-ipc-2020", fullSummary: "Cette note détaille la méthodologie utilisée pour le calcul de l'IPC avec la base 2020. Elle couvre la sélection du panier de biens, la pondération par catégorie de dépenses, les méthodes de collecte des prix, et le traitement des données manquantes.", relatedDashboard: "/tableaux-de-bord/ipc", year: "2025" },
-  { title: "Résultats préliminaires — Recensement 2023", type: "Recensement", date: "Décembre 2024", excerpt: "Premiers résultats du recensement général de la population et de l'habitat.", downloadUrl: "#", slug: "recensement-2023", fullSummary: "Les résultats préliminaires du recensement général de la population et de l'habitat de 2023 indiquent une population totale estimée à 12 millions d'habitants. La densité de population est de 432 habitants par km², avec une forte concentration dans le département de l'Ouest.", relatedDashboard: "/tableaux-de-bord/demographie", year: "2024" },
-  { title: "Bulletin trimestriel des statistiques — T3 2024", type: "Bulletin", date: "Octobre 2024", excerpt: "Indicateurs clés du troisième trimestre : PIB, emploi, commerce extérieur.", downloadUrl: "#", slug: "bulletin-t3-2024", fullSummary: "Le bulletin du troisième trimestre 2024 présente les indicateurs macroéconomiques clés avec un focus sur la croissance du PIB, les conditions du marché du travail, et la balance commerciale.", relatedDashboard: "/tableaux-de-bord/pib", year: "2024" },
-  { title: "Rapport sur la pauvreté multidimensionnelle", type: "Rapport", date: "Septembre 2024", excerpt: "Analyse des dimensions de la pauvreté au-delà du revenu monétaire.", downloadUrl: "#", slug: "rapport-pauvrete-2024", fullSummary: "Ce rapport analyse la pauvreté en Haïti selon une approche multidimensionnelle, prenant en compte l'accès à l'éducation, la santé, les conditions de logement, et l'emploi en plus du revenu monétaire. 58.5% de la population est considérée comme pauvre selon cet indice.", relatedDashboard: "/tableaux-de-bord/social", year: "2024" },
-  { title: "Communiqué PIB — T2 2024", type: "Communiqué", date: "Août 2024", excerpt: "Le PIB réel a progressé de 1.5% au deuxième trimestre par rapport à l'année précédente.", downloadUrl: "#", slug: "communique-pib-t2-2024", fullSummary: "Le PIB réel d'Haïti a enregistré une croissance de 1.5% au deuxième trimestre 2024 en glissement annuel. Les secteurs ayant le plus contribué à cette croissance sont les services (+2.1%) et l'agriculture (+1.8%).", relatedDashboard: "/tableaux-de-bord/pib", year: "2024" },
-  { title: "Guide utilisateur API IHSI v2", type: "Méthodologie", date: "Juillet 2024", excerpt: "Documentation technique pour l'utilisation de l'API REST de données ouvertes.", downloadUrl: "#", slug: "guide-api-v2", fullSummary: "Ce guide fournit la documentation complète de l'API REST IHSI v2, incluant les endpoints disponibles, les paramètres de requête, les formats de réponse, et des exemples de code en Python, R et JavaScript.", relatedDashboard: null, year: "2024" },
+  { title: "Bulletin trimestriel des statistiques — T4 2024", type: "Bulletin", date: "Mars 2025", excerpt: "Analyse des principaux indicateurs économiques et sociaux du quatrième trimestre 2024.", downloadUrl: "#", slug: "bulletin-t4-2024", fullSummary: "Ce bulletin présente une analyse détaillée des principaux indicateurs macroéconomiques et sociaux pour le quatrième trimestre 2024. Il couvre l'évolution du PIB, les tendances de l'emploi, l'inflation mesurée par l'IPC, ainsi que les indicateurs de commerce extérieur. Les données montrent une légère reprise économique avec une croissance du PIB de 1.8% en glissement annuel.", relatedDashboard: "/tableaux-de-bord/ipc", year: "2025", frequency: "Trimestriel" },
+  { title: "Rapport annuel sur l'emploi en Haïti 2024", type: "Rapport", date: "Février 2025", excerpt: "État complet du marché du travail avec analyse par secteur et département.", downloadUrl: "#", slug: "rapport-emploi-2024", fullSummary: "Ce rapport offre une vue exhaustive du marché du travail haïtien en 2024. Il analyse le taux de chômage par département, la répartition sectorielle de l'emploi, le sous-emploi et l'emploi informel. Des recommandations de politique publique sont formulées pour améliorer les conditions de travail.", relatedDashboard: "/tableaux-de-bord/travail", year: "2025", frequency: "Annuel" },
+  { title: "Communiqué IPC — Février 2025", type: "Communiqué", date: "Mars 2025", excerpt: "L'IPC a enregistré une hausse de 1.2% en février, portant l'inflation annuelle à 24.8%.", downloadUrl: "#", slug: "communique-ipc-fev-2025", fullSummary: "L'Indice des prix à la consommation a augmenté de 1.2% au mois de février 2025 par rapport au mois précédent. En glissement annuel, l'inflation atteint 24.8%, en baisse de 2.1 points par rapport à l'année précédente. Les hausses les plus marquées concernent les produits alimentaires (+28.3%) et le transport (+18.7%).", relatedDashboard: "/tableaux-de-bord/ipc", year: "2025", frequency: "Mensuel" },
+  { title: "Note méthodologique : Calcul de l'IPC base 2020", type: "Méthodologie", date: "Janvier 2025", excerpt: "Présentation de la méthodologie de calcul de l'indice des prix à la consommation.", downloadUrl: "#", slug: "methodologie-ipc-2020", fullSummary: "Cette note détaille la méthodologie utilisée pour le calcul de l'IPC avec la base 2020. Elle couvre la sélection du panier de biens, la pondération par catégorie de dépenses, les méthodes de collecte des prix, et le traitement des données manquantes.", relatedDashboard: "/tableaux-de-bord/ipc", year: "2025", frequency: "Annuel" },
+  { title: "Résultats préliminaires — Recensement 2023", type: "Recensement", date: "Décembre 2024", excerpt: "Premiers résultats du recensement général de la population et de l'habitat.", downloadUrl: "#", slug: "recensement-2023", fullSummary: "Les résultats préliminaires du recensement général de la population et de l'habitat de 2023 indiquent une population totale estimée à 12 millions d'habitants. La densité de population est de 432 habitants par km², avec une forte concentration dans le département de l'Ouest.", relatedDashboard: "/tableaux-de-bord/demographie", year: "2024", frequency: "Annuel" },
+  { title: "Bulletin trimestriel des statistiques — T3 2024", type: "Bulletin", date: "Octobre 2024", excerpt: "Indicateurs clés du troisième trimestre : PIB, emploi, commerce extérieur.", downloadUrl: "#", slug: "bulletin-t3-2024", fullSummary: "Le bulletin du troisième trimestre 2024 présente les indicateurs macroéconomiques clés avec un focus sur la croissance du PIB, les conditions du marché du travail, et la balance commerciale.", relatedDashboard: "/tableaux-de-bord/pib", year: "2024", frequency: "Trimestriel" },
+  { title: "Rapport sur la pauvreté multidimensionnelle", type: "Rapport", date: "Septembre 2024", excerpt: "Analyse des dimensions de la pauvreté au-delà du revenu monétaire.", downloadUrl: "#", slug: "rapport-pauvrete-2024", fullSummary: "Ce rapport analyse la pauvreté en Haïti selon une approche multidimensionnelle, prenant en compte l'accès à l'éducation, la santé, les conditions de logement, et l'emploi en plus du revenu monétaire. 58.5% de la population est considérée comme pauvre selon cet indice.", relatedDashboard: "/tableaux-de-bord/social", year: "2024", frequency: "Annuel" },
+  { title: "Communiqué PIB — T2 2024", type: "Communiqué", date: "Août 2024", excerpt: "Le PIB réel a progressé de 1.5% au deuxième trimestre par rapport à l'année précédente.", downloadUrl: "#", slug: "communique-pib-t2-2024", fullSummary: "Le PIB réel d'Haïti a enregistré une croissance de 1.5% au deuxième trimestre 2024 en glissement annuel. Les secteurs ayant le plus contribué à cette croissance sont les services (+2.1%) et l'agriculture (+1.8%).", relatedDashboard: "/tableaux-de-bord/pib", year: "2024", frequency: "Trimestriel" },
+  { title: "Guide utilisateur API IHSI v2", type: "Méthodologie", date: "Juillet 2024", excerpt: "Documentation technique pour l'utilisation de l'API REST de données ouvertes.", downloadUrl: "#", slug: "guide-api-v2", fullSummary: "Ce guide fournit la documentation complète de l'API REST IHSI v2, incluant les endpoints disponibles, les paramètres de requête, les formats de réponse, et des exemples de code en Python, R et JavaScript.", relatedDashboard: null, year: "2024", frequency: "Annuel" },
 ];
 
 const ITEMS_PER_PAGE = 6;
@@ -39,7 +41,9 @@ export default function Publications() {
   const [activeFilter, setActiveFilter] = useState(categoryType || "Tous");
   const [search, setSearch] = useState("");
   const [selectedYear, setSelectedYear] = useState("Toutes");
+  const [selectedFrequency, setSelectedFrequency] = useState("Toutes");
   const [page, setPage] = useState(1);
+  const [previewPub, setPreviewPub] = useState<typeof publications[0] | null>(null);
 
   // Detail view (only if slug exists, is NOT a category, and matches a publication)
   if (slug && !categoryType) {
@@ -109,7 +113,8 @@ export default function Publications() {
     const matchType = activeFilter === "Tous" || p.type === activeFilter;
     const matchSearch = !search || p.title.toLowerCase().includes(search.toLowerCase());
     const matchYear = selectedYear === "Toutes" || p.year === selectedYear;
-    return matchType && matchSearch && matchYear;
+    const matchFreq = selectedFrequency === "Toutes" || p.frequency === selectedFrequency;
+    return matchType && matchSearch && matchYear && matchFreq;
   });
 
   const totalPages = Math.ceil(filtered.length / ITEMS_PER_PAGE);
@@ -134,6 +139,16 @@ export default function Publications() {
               searchPlaceholder="Rechercher une publication..."
             />
           </div>
+          <Select value={selectedFrequency} onValueChange={(v) => { setSelectedFrequency(v); setPage(1); }}>
+            <SelectTrigger className="w-32 h-9">
+              <SelectValue placeholder="Périodicité" />
+            </SelectTrigger>
+            <SelectContent>
+              {frequencies.map((f) => (
+                <SelectItem key={f} value={f}>{f === "Toutes" ? "Toutes périodes" : f}</SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
           <Select value={selectedYear} onValueChange={(v) => { setSelectedYear(v); setPage(1); }}>
             <SelectTrigger className="w-28 h-9">
               <SelectValue placeholder="Année" />
@@ -148,8 +163,20 @@ export default function Publications() {
 
         <div className="space-y-4">
           {paginated.map((pub) => (
-            <div key={pub.slug} className="cursor-pointer" onClick={() => navigate(`/publications/${pub.slug}`)}>
-              <PublicationCard {...pub} />
+            <div key={pub.slug} className="relative group">
+              <div className="cursor-pointer" onClick={() => navigate(`/publications/${pub.slug}`)}>
+                <PublicationCard {...pub} />
+              </div>
+              <div className="absolute top-4 right-4 opacity-0 group-hover:opacity-100 transition-opacity">
+                <Button
+                  variant="outline"
+                  size="sm"
+                  className="gap-1.5 text-xs bg-card shadow-sm"
+                  onClick={(e) => { e.stopPropagation(); setPreviewPub(pub); }}
+                >
+                  <Eye className="h-3.5 w-3.5" /> Aperçu
+                </Button>
+              </div>
             </div>
           ))}
           {paginated.length === 0 && (
@@ -175,6 +202,37 @@ export default function Publications() {
           </div>
         )}
       </section>
+
+      {/* Preview Modal */}
+      <Dialog open={!!previewPub} onOpenChange={(open) => !open && setPreviewPub(null)}>
+        <DialogContent className="max-w-lg">
+          <DialogHeader>
+            <DialogTitle className="text-lg leading-snug">{previewPub?.title}</DialogTitle>
+          </DialogHeader>
+          {previewPub && (
+            <div className="space-y-4">
+              <div className="flex items-center gap-2">
+                <span className="inline-flex items-center rounded-md bg-secondary/10 px-2.5 py-0.5 text-xs font-medium text-secondary">
+                  {previewPub.type}
+                </span>
+                <span className="text-xs text-muted-foreground">{previewPub.date}</span>
+                <span className="text-xs text-muted-foreground">· {previewPub.frequency}</span>
+              </div>
+              <p className="text-sm text-muted-foreground leading-relaxed">{previewPub.fullSummary}</p>
+              <div className="flex gap-2 pt-2">
+                <Button className="gap-2" size="sm" asChild>
+                  <a href={previewPub.downloadUrl}>
+                    <Download className="h-4 w-4" /> Télécharger
+                  </a>
+                </Button>
+                <Button variant="outline" size="sm" className="gap-2" onClick={() => { setPreviewPub(null); navigate(`/publications/${previewPub.slug}`); }}>
+                  <FileText className="h-4 w-4" /> Lire en détail
+                </Button>
+              </div>
+            </div>
+          )}
+        </DialogContent>
+      </Dialog>
     </Layout>
   );
 }
