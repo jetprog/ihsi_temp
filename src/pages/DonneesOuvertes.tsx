@@ -14,7 +14,7 @@ const frequencies = ["Toutes", "Mensuel", "Trimestriel", "Annuel"];
 const datasets = [
   { title: "Population par département, 2015-2024", description: "Estimations annuelles de la population par département et commune.", formats: ["CSV", "JSON", "API"], date: "Mars 2025", category: "Démographie", frequency: "Annuel" },
   { title: "Indice des prix à la consommation mensuel", description: "IPC mensuel par catégorie de produits depuis 2010.", formats: ["CSV", "JSON"], date: "Mars 2025", category: "Économie", frequency: "Mensuel" },
-  { title: "Enquête emploi 2024 — Résultats", description: "Microdata de l'enquête nationale sur l'emploi et le marché du travail.", formats: ["CSV", "XLSX"], date: "Février 2025", category: "Travail", frequency: "Annuel" },
+  { title: "Enquête emploi 2024 — Résultats", description: "Microdata de l'enquête nationale sur l'emploi et le marché du travail.", formats: ["CSV", "XLSX"], date: "Février 2025", category: "Emploi", frequency: "Annuel" },
   { title: "PIB trimestriel par secteur d'activité", description: "Ventilation du PIB par secteur économique, séries trimestrielles.", formats: ["CSV", "JSON", "API"], date: "Janvier 2025", category: "Économie", frequency: "Trimestriel" },
   { title: "Indicateurs de santé par département", description: "Taux de mortalité, accès aux soins, couverture vaccinale.", formats: ["CSV"], date: "Décembre 2024", category: "Social", frequency: "Annuel" },
   { title: "Données géospatiales des communes", description: "Fichiers shapefile et GeoJSON des limites administratives.", formats: ["GeoJSON"], date: "Novembre 2024", category: "Géographie", frequency: "Annuel" },

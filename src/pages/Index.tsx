@@ -176,10 +176,18 @@ export default function Index() {
       {/* KPI Ribbon */}
       <section className="container -mt-6 relative z-10">
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-          <StatCard label="Population" value="12.0M" trend="up" trendValue="+1.4%" sparklineData={[10.8, 11.0, 11.1, 11.3, 11.4, 11.6, 11.7, 11.9, 12.0]} icon={<Users className="h-4 w-4" />} />
-          <StatCard label="Inflation (IPC)" value="24.8%" trend="down" trendValue="-2.1 pts" sparklineData={[28, 27, 26.5, 26, 25.5, 25, 24.8]} icon={<Activity className="h-4 w-4" />} />
-          <StatCard label="Taux de chômage" value="14.5%" trend="neutral" trendValue="0.0 pts" sparklineData={[15, 14.8, 14.6, 14.5, 14.5, 14.6, 14.5]} icon={<Briefcase className="h-4 w-4" />} />
-          <StatCard label="Croissance PIB" value="1.8%" trend="up" trendValue="+0.5 pts" sparklineData={[0.5, 0.8, 1.0, 1.2, 1.3, 1.5, 1.8]} icon={<TrendingUp className="h-4 w-4" />} />
+          <Link to="/statistiques/demographie">
+            <StatCard label="Population" value="12.0M" trend="up" trendValue="+1.4%" sparklineData={[10.8, 11.0, 11.1, 11.3, 11.4, 11.6, 11.7, 11.9, 12.0]} icon={<Users className="h-4 w-4" />} />
+          </Link>
+          <Link to="/statistiques/economie">
+            <StatCard label="Inflation (IPC)" value="24.8%" trend="down" trendValue="-2.1 pts" sparklineData={[28, 27, 26.5, 26, 25.5, 25, 24.8]} icon={<Activity className="h-4 w-4" />} />
+          </Link>
+          <Link to="/statistiques/travail">
+            <StatCard label="Taux de chômage" value="14.5%" trend="neutral" trendValue="0.0 pts" sparklineData={[15, 14.8, 14.6, 14.5, 14.5, 14.6, 14.5]} icon={<Briefcase className="h-4 w-4" />} />
+          </Link>
+          <Link to="/statistiques/economie">
+            <StatCard label="Croissance PIB" value="1.8%" trend="up" trendValue="+0.5 pts" sparklineData={[0.5, 0.8, 1.0, 1.2, 1.3, 1.5, 1.8]} icon={<TrendingUp className="h-4 w-4" />} />
+          </Link>
         </div>
       </section>
 

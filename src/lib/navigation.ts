@@ -48,7 +48,7 @@ export const navigationItems: NavGroup[] = [
       { title: "Démographie", href: "/tableaux-de-bord/demographie", icon: Users, description: "Indicateurs démographiques" },
       { title: "IPC", href: "/tableaux-de-bord/ipc", icon: Activity, description: "Indice des prix à la consommation" },
       { title: "PIB", href: "/tableaux-de-bord/pib", icon: DollarSign, description: "Produit intérieur brut" },
-      { title: "Travail", href: "/tableaux-de-bord/travail", icon: Briefcase, description: "Marché du travail" },
+      { title: "Emploi", href: "/tableaux-de-bord/travail", icon: Briefcase, description: "Marché du travail" },
       { title: "Social", href: "/tableaux-de-bord/social", icon: PieChart, description: "Indicateurs sociaux" },
     ],
   },

@@ -90,7 +90,7 @@ const topics: Record<string, TopicConfig> = {
     source: "BRH — Rapports économiques, IHSI — Comptes nationaux",
   },
   travail: {
-    title: "Travail",
+    title: "Emploi",
     description: "Statistiques sur l'emploi, le chômage, le marché du travail et les conditions de travail.",
     icon: <Briefcase className="h-5 w-5" />,
     kpis: [
