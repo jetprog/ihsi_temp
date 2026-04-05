@@ -241,6 +241,7 @@ function TopicPage({ topic }: { topic: TopicConfig }) {
     };
     img.src = "data:image/svg+xml;base64," + btoa(unescape(encodeURIComponent(svgData)));
   };
+  return (
     <Layout>
       <section className="bg-primary text-primary-foreground py-6">
         <div className="container">
