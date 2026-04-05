@@ -8,12 +8,15 @@ import {
   AccordionTrigger,
 } from "@/components/ui/accordion";
 import { ScrollArea } from "@/components/ui/scroll-area";
+import { useLanguage } from "@/i18n/context";
 
 interface MobileNavProps {
   currentPath: string;
 }
 
 export function MobileNav({ currentPath }: MobileNavProps) {
+  const { t } = useLanguage();
+
   return (
     <ScrollArea className="h-[calc(100vh-65px)]">
       <div className="p-4">
@@ -21,6 +24,7 @@ export function MobileNav({ currentPath }: MobileNavProps) {
           {navigationItems.map((item) => {
             const Icon = item.icon;
             const isActive = currentPath === item.href || currentPath.startsWith(item.href + "/");
+            const title = item.titleKey ? t(item.titleKey) : item.title;
 
             if (!item.children) {
               return (
@@ -33,7 +37,7 @@ export function MobileNav({ currentPath }: MobileNavProps) {
                   )}
                 >
                   <Icon className="h-4 w-4" />
-                  {item.title}
+                  {title}
                 </Link>
               );
             }
@@ -46,13 +50,14 @@ export function MobileNav({ currentPath }: MobileNavProps) {
                 )}>
                   <div className="flex items-center gap-3">
                     <Icon className="h-4 w-4" />
-                    {item.title}
+                    {title}
                   </div>
                 </AccordionTrigger>
                 <AccordionContent>
                   <div className="ml-4 space-y-1 pt-1">
                     {item.children.map((child) => {
                       const ChildIcon = child.icon;
+                      const childTitle = child.titleKey ? t(child.titleKey) : child.title;
                       return (
                         <Link
                           key={child.href}
@@ -65,7 +70,7 @@ export function MobileNav({ currentPath }: MobileNavProps) {
                           )}
                         >
                           <ChildIcon className="h-3.5 w-3.5" />
-                          {child.title}
+                          {childTitle}
                         </Link>
                       );
                     })}

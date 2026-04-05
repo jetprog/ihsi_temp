@@ -3,6 +3,7 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Calendar, Download, FileText } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { useLanguage } from "@/i18n/context";
 
 const typeBadgeColors: Record<string, string> = {
   "Bulletin": "bg-[hsl(213,52%,23%)]/10 text-primary border-primary/20",
@@ -20,6 +21,7 @@ interface PublicationCardProps {
 }
 
 export function PublicationCard({ title, type, date, excerpt, downloadUrl }: PublicationCardProps) {
+  const { t } = useLanguage();
   const badgeClass = typeBadgeColors[type] || "bg-muted text-muted-foreground";
 
   return (
