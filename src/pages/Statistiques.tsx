@@ -215,7 +215,32 @@ function exportPDF(topic: TopicConfig) {
 }
 
 function TopicPage({ topic }: { topic: TopicConfig }) {
-  return (
+  const chartRef = useRef<HTMLDivElement>(null);
+
+  const exportChartPNG = () => {
+    if (!chartRef.current) return;
+    const svg = chartRef.current.querySelector("svg");
+    if (!svg) return;
+    const svgData = new XMLSerializer().serializeToString(svg);
+    const canvas = document.createElement("canvas");
+    const svgRect = svg.getBoundingClientRect();
+    canvas.width = svgRect.width * 2;
+    canvas.height = svgRect.height * 2;
+    const ctx = canvas.getContext("2d");
+    if (!ctx) return;
+    ctx.scale(2, 2);
+    const img = new window.Image();
+    img.onload = () => {
+      ctx.fillStyle = "#ffffff";
+      ctx.fillRect(0, 0, canvas.width, canvas.height);
+      ctx.drawImage(img, 0, 0);
+      const a = document.createElement("a");
+      a.download = `${topic.title.toLowerCase()}-graphique-ihsi.png`;
+      a.href = canvas.toDataURL("image/png");
+      a.click();
+    };
+    img.src = "data:image/svg+xml;base64," + btoa(unescape(encodeURIComponent(svgData)));
+  };
     <Layout>
       <section className="bg-primary text-primary-foreground py-6">
         <div className="container">
